@@ -54,12 +54,12 @@
                             </h3>
                             <ul>
                                 <li>
-                                    <a href="#">
+                                    <a href="/login">
                                         Đăng nhập
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/login">
                                         Đăng ký
                                     </a>
                                 </li>

@@ -9,12 +9,7 @@
             </span>
         </div>
         <div class="flex items-center space-x-4">
-            <a class="text-sm" href="#">
-                Chọn rạp
-            </a>
-            <a class="text-sm" href="#">
-                Lịch chiếu
-            </a>
+
             <button class="bg-yellow-400 text-black px-4 py-2 rounded">
                 ĐẶT VÉ NGAY
             </button>
@@ -22,7 +17,7 @@
                 ĐẶT BẮP NƯỚC
             </button>
             <input class="px-2 py-1 rounded" placeholder="Tìm phim, rạp" type="text" />
-            <a class="text-sm" href="#">
+            <a class="text-sm" href="/login">
                 Đăng nhập
             </a>
             <a class="text-sm flex items-center" href="#">
@@ -32,7 +27,26 @@
                 VN
             </a>
         </div>
+
     </header>
+    <div class="flex justify-between items-center px-4 py-2 border-t border-gray-700">
+        <div class="flex space-x-4">
+            <div class="flex items-center space-x-1">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Chọn rạp</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Lịch chiếu</span>
+            </div>
+        </div>
+        <div class="flex space-x-4">
+            <span>Khuyến mãi</span>
+            <span>Thuê sự kiện</span>
+            <span>Tất cả các giải trí</span>
+            <span>Giới thiệu</span>
+        </div>
+    </div>
 </template>
 <script>
 export default {

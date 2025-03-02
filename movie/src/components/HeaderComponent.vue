@@ -57,7 +57,7 @@
             <a href="#">Khuyến mãi</a>
             <a href="#">Thuê sự kiện</a>
             <a href="/cac-loai-hinh-giai-tri-khac">Tất cả các giải trí</a>
-            <a href="#">Giới thiệu</a>
+            <a href="/abouts-us">Giới thiệu</a>
         </div>
 
 

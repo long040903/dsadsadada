@@ -5,6 +5,7 @@ import Movie from './view/MovieView.vue';
 import MovieDetail from './view/MovieDetailView.vue';
 import Entertainment from './view/EntertainmentView.vue';
 import EntertainmentDetail from './view/EntertainmentDetailView.vue';
+import Abouts from './view/AboutsView.vue';
 
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
         path: '/entertainment-detail',
         name: 'EntertainmentDetailView',
         component: EntertainmentDetail,
+    },
+    {
+        path: '/abouts-us',
+        name: 'AboutsView',
+        component: Abouts,
     },
 ];
 

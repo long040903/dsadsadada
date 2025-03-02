@@ -7,6 +7,7 @@ import Entertainment from './view/EntertainmentView.vue';
 import EntertainmentDetail from './view/EntertainmentDetailView.vue';
 import Abouts from './view/AboutsView.vue';
 import Payment from './view/PaymentView.vue';
+import Showtimes from './view/ShowtimesView.vue';
 
 
 const routes = [
@@ -49,6 +50,11 @@ const routes = [
         path: '/payment',
         name: 'PaymentView',
         component: Payment,
+    },
+    {
+        path: '/showtimes',
+        name: 'ShowtimesView',
+        component: Showtimes,
     },
 ];
 

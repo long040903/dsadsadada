@@ -50,7 +50,7 @@
             </div>
             <div class="flex items-center space-x-1">
                 <i class="fas fa-calendar-alt"></i>
-                <span>Lịch chiếu</span>
+                <a href="/showtimes">Lịch chiếu</a>
             </div>
         </div>
         <div class="flex space-x-4">

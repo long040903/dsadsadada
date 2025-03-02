@@ -31,9 +31,22 @@
     </header>
     <div class="flex justify-between items-center px-4 py-2 border-t border-gray-700">
         <div class="flex space-x-4">
-            <div class="flex items-center space-x-1">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>Chọn rạp</span>
+            <div class="flex items-center space-x-1" @mouseover="showCinemaList" @mouseleave="hideCinemaList">
+                <a href="#" class="flex items-center text-yellow-400">
+                    <i class="fas fa-map-marker-alt mr-1"></i> Chọn rạp
+                </a>
+                <div class="mt-4 border-t border-gray-700 pt-4" v-if="isCinemaListVisible">
+                    <div class="cinema-list grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                        <div>Cinestar Quốc Thanh (TP.HCM)</div>
+                        <div>Cinestar Hai Bà Trưng (TP.HCM)</div>
+                        <div>Cinestar Sinh Viên (Bình Dương)</div>
+                        <div>Cinestar Huế (TP. Huế)</div>
+                        <div>Cinestar Đà Lạt (TP.Đà Lạt)</div>
+                        <div>Cinestar Lâm Đồng (Đức Trọng)</div>
+                        <div>Cinestar Mỹ Tho (Tiền Giang)</div>
+                        <div>Cinestar Kiên Giang (Rạch Sỏi)</div>
+                    </div>
+                </div>
             </div>
             <div class="flex items-center space-x-1">
                 <i class="fas fa-calendar-alt"></i>
@@ -47,9 +60,12 @@
             <a href="#">Giới thiệu</a>
         </div>
 
+
     </div>
+
 </template>
 <script>
+// import '../assets/js/header';
 export default {
     name: "HeaderHomePage",
     components: {
@@ -57,11 +73,16 @@ export default {
     },
     data() {
         return {
-
-        }
+            isCinemaListVisible: false, // Trạng thái hiển thị danh sách rạp
+        };
     },
     methods: {
-
+        showCinemaList() {
+            this.isCinemaListVisible = true; // Hiển thị danh sách rạp khi di chuột vào
+        },
+        hideCinemaList() {
+            this.isCinemaListVisible = false; // Ẩn danh sách rạp khi di chuột ra
+        },
     },
     mounted() {
 

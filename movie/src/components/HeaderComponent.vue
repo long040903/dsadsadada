@@ -41,11 +41,12 @@
             </div>
         </div>
         <div class="flex space-x-4">
-            <span>Khuyến mãi</span>
-            <span>Thuê sự kiện</span>
-            <span>Tất cả các giải trí</span>
-            <span>Giới thiệu</span>
+            <a href="#">Khuyến mãi</a>
+            <a href="#">Thuê sự kiện</a>
+            <a href="/cac-loai-hinh-giai-tri-khac">Tất cả các giải trí</a>
+            <a href="#">Giới thiệu</a>
         </div>
+
     </div>
 </template>
 <script>

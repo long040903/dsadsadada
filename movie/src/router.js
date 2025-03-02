@@ -6,6 +6,7 @@ import MovieDetail from './view/MovieDetailView.vue';
 import Entertainment from './view/EntertainmentView.vue';
 import EntertainmentDetail from './view/EntertainmentDetailView.vue';
 import Abouts from './view/AboutsView.vue';
+import Payment from './view/PaymentView.vue';
 
 
 const routes = [
@@ -43,6 +44,11 @@ const routes = [
         path: '/abouts-us',
         name: 'AboutsView',
         component: Abouts,
+    },
+    {
+        path: '/payment',
+        name: 'PaymentView',
+        component: Payment,
     },
 ];
 

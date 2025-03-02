@@ -4,6 +4,7 @@ import LoginRegister from './view/LoginRegisterView.vue';
 import Movie from './view/MovieView.vue';
 import MovieDetail from './view/MovieDetailView.vue';
 import Entertainment from './view/EntertainmentView.vue';
+import EntertainmentDetail from './view/EntertainmentDetailView.vue';
 
 
 const routes = [
@@ -31,7 +32,12 @@ const routes = [
         path: '/cac-loai-hinh-giai-tri-khac',
         name: 'EntertainmentView',
         component: Entertainment,
-    }
+    },
+    {
+        path: '/entertainment-detail',
+        name: 'EntertainmentDetailView',
+        component: EntertainmentDetail,
+    },
 ];
 
 const router = createRouter({

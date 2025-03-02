@@ -1,0 +1,82 @@
+#booking-bar {
+    z-index: 50;
+    /* Đảm bảo rằng thanh vé sẽ luôn nằm phía trên các phần tử khác */
+    transition: bottom 0.3s ease;
+}
+
+.toggle-button {
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    /* Đảm bảo nút nằm trên các phần tử khác */
+}
+
+.screen {
+    width: 80%;
+    height: 20px;
+    background-color: white;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-color: #fff;
+    color: #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background-color: #ffeb3b;
+}
+
+.seat.booked {
+    background-color: #4a5568;
+    cursor: not-allowed;
+}
+
+.seat.double {
+    width: 85px;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.legend div {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.legend div span {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .normal span {
+    background-color: #fff;
+}
+
+.legend .double span {
+    background-color: #fff;
+    width: 40px;
+}
+
+.legend .selected span {
+    background-color: #ffeb3b;
+}
+
+.legend .booked span {
+    background-color: #4a5568;
+}

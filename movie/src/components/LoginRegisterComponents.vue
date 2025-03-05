@@ -108,7 +108,7 @@
     </div>
     <div class="pb-4">
         <input type ="checkbox" /> 
-        <a class="text-black p-4" href="">Khách hàng đã đồng ý các điều khoản, điều kiện của thành viên Cinestar</a>
+        <a class="text-black p-4" href="">Khách hàng đã đồng ý các điều khoản, điều kiện của thành viên MovieCiname</a>
     </div>
     <div>
         <button class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">

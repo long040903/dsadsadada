@@ -21,9 +21,11 @@ npm run preview
 ```
 ### commnent files
 pnpm store prune
-pnpm install --force
+pnpm install --forceA
 rm -rf node_modules pnpm-lock.yaml
 pnpm install
 pnpm add esbuild@latest
 pnpm install esbuild
 pnpm install
+### install pnpm
+npm install -g pnpm

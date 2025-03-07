@@ -9,7 +9,6 @@
             </span>
         </div>
         <div class="flex items-center space-x-4">
-
             <button class="bg-yellow-400 text-black px-4 py-2 rounded">
                 ĐẶT VÉ NGAY
             </button>
@@ -17,9 +16,29 @@
                 ĐẶT BẮP NƯỚC
             </button>
             <input class="px-2 py-1 rounded" placeholder="Tìm phim, rạp" type="text" />
-            <a class="text-sm" href="/login">
-                Đăng nhập
-            </a>
+
+            <template v-if="isLoggedIn">
+                <!-- Show user's name and logout button -->
+                <div class="relative">
+                    <button @click="toggleMenu" class="flex items-center space-x-1">
+                        <span class="bg-gray-700 text-white px-3 py-2 rounded-full">
+                            {{ userName.charAt(0) }}
+                        </span>
+                    </button>
+                    <div v-if="menuVisible" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-10">
+                        <!-- Make sure the menu is correctly positioned and stacked above other content -->
+                        <a href="#" class="block px-4 py-2 text-gray-800">{{ userName }}</a>
+                        <a href="#" @click="logout" class="block px-4 py-2 text-gray-800">Đăng xuất</a>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <!-- Show login link if not logged in -->
+                <a class="text-sm" href="/login">
+                    Đăng nhập
+                </a>
+            </template>
+
             <a class="text-sm flex items-center" href="#">
                 <img alt="VN Flag" class="mr-1" height="20"
                     src="https://storage.googleapis.com/a1aa/image/xaZfuYU0YG3zoXBW3Tf0tgk6TtIc6eDsBZAWQwwta0Q.jpg"
@@ -27,7 +46,6 @@
                 VN
             </a>
         </div>
-
     </header>
     <div class="flex justify-between items-center px-4 py-2 border-t border-gray-700">
         <div class="flex space-x-4">
@@ -59,33 +77,61 @@
             <a href="/cac-loai-hinh-giai-tri-khac">Tất cả các giải trí</a>
             <a href="/abouts-us">Giới thiệu</a>
         </div>
-
-
     </div>
-
 </template>
+
 <script>
-// import '../assets/js/header';
+import Cookies from 'js-cookie';
+
 export default {
     name: "HeaderHomePage",
-    components: {
-
-    },
     data() {
         return {
-            isCinemaListVisible: false, // Trạng thái hiển thị danh sách rạp
+            isCinemaListVisible: false,
+            menuVisible: false,
+            isLoggedIn: false,
+            userName: "", // Sử dụng để lưu email
         };
     },
     methods: {
         showCinemaList() {
-            this.isCinemaListVisible = true; // Hiển thị danh sách rạp khi di chuột vào
+            this.isCinemaListVisible = true;
         },
         hideCinemaList() {
-            this.isCinemaListVisible = false; // Ẩn danh sách rạp khi di chuột ra
+            this.isCinemaListVisible = false;
         },
+        toggleMenu() {
+            this.menuVisible = !this.menuVisible;
+        },
+        logout() {
+            Cookies.remove('authToken');
+            this.isLoggedIn = false;
+            this.$router.push('/login');
+        },
+        decodeToken(token) {
+            const base64Url = token.split('.')[1]; // Lấy phần payload
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Chuyển đổi base64url sang base64
+
+            // Giải mã base64 thành JSON
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
     },
     mounted() {
-
+        const token = Cookies.get('authToken');
+        console.log(token);
+        if (token) {
+            try {
+                const decoded = this.decodeToken(token);
+                this.isLoggedIn = true;
+                this.userName = decoded.fullname || "User"; // Lấy email từ token, không phải username
+            } catch (error) {
+                console.error('Error decoding token:', error);
+            }
+        }
     }
 }
 </script>

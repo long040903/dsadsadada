@@ -116,7 +116,7 @@
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
                             Xác nhận mật khẩu <span class="text-red-500">*</span>
                         </label>
-                        <input
+                        <input v-model="confirmPassword"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="confirm-password" type="password" placeholder="Nhập lại mật khẩu">
                         <i class="fas fa-eye absolute right-3 top-10 text-gray-500 cursor-pointer"></i>
@@ -163,6 +163,7 @@ export default {
             activeTab: 'login',
             email: '',
             password: '',
+            confirmPassword: '',
             fullname: '',
             ngay_sinh: '',
             phone: '',
@@ -206,6 +207,10 @@ export default {
             }
         },
         async register() {
+            if (this.password !== this.confirmPassword) {
+                toast.error("Mật khẩu và xác nhận mật khẩu không khớp. Vui long nhập lại ", { autoClose: 2000 });
+                return; // Ngăn chặn việc gửi yêu cầu nếu không khớp
+            }
             try {
                 const apiUrl = import.meta.env.VITE_API_BASE_URL + '/auth/register';
                 const response = await axios.post(apiUrl, {

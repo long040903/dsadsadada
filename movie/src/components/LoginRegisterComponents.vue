@@ -59,7 +59,7 @@
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="full-name">
                             Họ và Tên <span class="text-red-500">*</span>
                         </label>
-                        <input v-model="full_name"
+                        <input v-model="fullname"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="full-name" type="text" placeholder="Nhập họ và tên">
                     </div>
@@ -163,7 +163,7 @@ export default {
             activeTab: 'login',
             email: '',
             password: '',
-            full_name: '',
+            fullname: '',
             ngay_sinh: '',
             phone: '',
             username: '',
@@ -209,10 +209,10 @@ export default {
             try {
                 const apiUrl = import.meta.env.VITE_API_BASE_URL + '/auth/register';
                 const response = await axios.post(apiUrl, {
-                    full_name: this.full_name,
+                    fullname: this.fullname,
                     ngay_sinh: this.ngay_sinh,
                     phone: this.phone,
-                    user_name: this.username,
+                    username: this.username,
                     cccd: this.cccd,
                     email: this.email,
                     password: this.password

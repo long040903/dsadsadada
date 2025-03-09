@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+    <div class="text-white">
         <footer class="py-10">
             <div class="container mx-auto px-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">

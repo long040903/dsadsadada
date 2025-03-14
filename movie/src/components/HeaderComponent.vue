@@ -25,7 +25,7 @@
                             {{ userName.charAt(0) }}
                         </span>
                     </button>
-                    <div v-if="menuVisible" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-10">
+                    <div v-if="menuVisible" class="absolute right-1 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-10 -left-[91px]">
                         <!-- Make sure the menu is correctly positioned and stacked above other content -->
                         <a href="#" class="block px-4 py-2 text-gray-800">{{ userName }}</a>
                         <a href="#" @click="logout" class="block px-4 py-2 text-gray-800">Đăng xuất</a>
@@ -49,12 +49,19 @@
     </header>
     <div class="flex justify-between items-center px-4 py-2 border-t border-gray-700">
         <div class="flex space-x-4">
-            <div class="flex items-center space-x-1" @mouseover="showCinemaList" @mouseleave="hideCinemaList">
+            <div class="relative flex items-center space-x-1" @mouseover="showCinemaList">
+                <!-- Nút Chọn rạp -->
                 <a href="#" class="flex items-center text-yellow-400">
                     <i class="fas fa-map-marker-alt mr-1"></i> Chọn rạp
                 </a>
-                <div class="mt-4 border-t border-gray-700 pt-4" v-if="isCinemaListVisible">
-                    <div class="cinema-list grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            
+                <!-- Danh sách rạp -->
+                <div v-if="isCinemaListVisible"
+                    class="absolute left-0 top-full mt-2 w-auto min-w-[1400px] bg-black border border-gray-700 shadow-lg rounded-lg z-50 p-4"
+                    @mouseover="showCinemaList" @mouseleave="hideCinemaList">
+            
+                    <!-- Hiển thị 3 rạp mỗi hàng -->
+                    <div class="grid grid-cols-3 gap-4 text-sm text-white">
                         <div>Cinestar Quốc Thanh (TP.HCM)</div>
                         <div>Cinestar Hai Bà Trưng (TP.HCM)</div>
                         <div>Cinestar Sinh Viên (Bình Dương)</div>
@@ -66,6 +73,10 @@
                     </div>
                 </div>
             </div>
+            
+            
+            
+            
             <div class="flex items-center space-x-1">
                 <i class="fas fa-calendar-alt"></i>
                 <a href="/showtimes">Lịch chiếu</a>

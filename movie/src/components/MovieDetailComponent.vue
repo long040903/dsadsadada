@@ -282,7 +282,7 @@
   <div
     class="booking-movie flex flex-col items-center p-8 active"
     id="booking-section"
-    style="display: block"
+    style="display: none"
   >
     <h1 class="text-2xl font-bold mb-4">CHỌN LOẠI VÉ</h1>
     <div class="flex justify-center space-x-4 mb-8">

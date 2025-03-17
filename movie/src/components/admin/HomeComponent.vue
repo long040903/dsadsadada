@@ -283,6 +283,7 @@ export default {
                 this.form.genre = movies.genre;
                 this.form.bannerUrl = movies.banner_url;
                 this.form.trailerUrl = movies.trailer_url;
+                this.form.releaseYear = movies.release_year;
                 this.form.director = movies.director;
                 this.form.cast = movies.cast;
                 this.form.description = movies.description;

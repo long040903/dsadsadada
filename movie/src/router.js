@@ -8,6 +8,8 @@ import EntertainmentDetail from './view/EntertainmentDetailView.vue';
 import Abouts from './view/AboutsView.vue';
 import Payment from './view/PaymentView.vue';
 import Showtimes from './view/ShowtimesView.vue';
+import HomeComponent from './components/admin/HomeComponent.vue';
+import LoginComponent from './components/admin/LoginComponent.vue';
 
 
 const routes = [
@@ -55,6 +57,16 @@ const routes = [
         path: '/showtimes',
         name: 'ShowtimesView',
         component: Showtimes,
+    },
+    {
+        path: '/admin',
+        name: 'HomeAdmin',
+        component: HomeComponent,
+    },
+    {
+        path: '/admin/login',
+        name: 'LoginAdmin',
+        component: LoginComponent,
     },
 ];
 

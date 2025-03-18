@@ -1,7 +1,8 @@
 <template>
   <HeaderComponents />
   <div class="p-4">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto"> 
+      
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 py-6">
         <div class="p-2 border-[#a9a9a9] border rounded-lg">
           <div class="flex justify-between mb-2">

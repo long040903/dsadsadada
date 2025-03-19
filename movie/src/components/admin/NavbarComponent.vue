@@ -7,90 +7,43 @@
         </div>
         <nav class="mt-4">
             <ul>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin">
                         <i class="fas fa-chevron-right mr-2"></i>
                         <span>Quản lý phim</span>
                     </a>
                 </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
                     <a class="flex items-center" href="#">
                         <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý thông tin chính sách</span>
+                        <span>Quản lý người dùng</span>
                     </a>
                 </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin/cinemas">
+                        <i class="fas fa-chevron-right mr-2"></i>
+                        <span>Quản lý rạp phim</span>
+                    </a>
+                </li>
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
                     <a class="flex items-center" href="#">
                         <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Đăng ký chính sách</span>
+                        <span>Quản lý lịch chiếu</span>
                     </a>
                 </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
                     <a class="flex items-center" href="#">
                         <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý thông tin voucher</span>
+                        <span>quản lý số ghế </span>
                     </a>
                 </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
                     <a class="flex items-center" href="#">
                         <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Danh sách voucher</span>
+                        <span>quản lý đồ ăn vặt </span>
                     </a>
                 </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Yêu cầu dùng voucher</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý truyền thông</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý Công ty</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý nhân sự phụ trách NPP</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản lý user – NPP</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Danh mục</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Từ điển</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Nhà phân phối cấp 1</span>
-                    </a>
-                </li>
-                <li class="px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
-                        <i class="fas fa-chevron-right mr-2"></i>
-                        <span>Quản trị</span>
-                    </a>
-                </li>
+                
             </ul>
         </nav>
     </div>

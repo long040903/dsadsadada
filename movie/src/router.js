@@ -10,6 +10,7 @@ import Payment from './view/PaymentView.vue';
 import Showtimes from './view/ShowtimesView.vue';
 import HomeComponent from './components/admin/HomeComponent.vue';
 import LoginComponent from './components/admin/LoginComponent.vue';
+import CinemasAdmin from './view/admin/CinemasView.vue'
 
 
 const routes = [
@@ -62,6 +63,11 @@ const routes = [
         path: '/admin',
         name: 'HomeAdmin',
         component: HomeComponent,
+    },
+    {
+        path: '/admin/cinemas',
+        name: 'MovieAdmin',
+        component: CinemasAdmin,
     },
     {
         path: '/admin/login',

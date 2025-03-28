@@ -29,212 +29,67 @@
                 ĐẶT NGAY
             </button>
         </div>
-        <h2 class="text-center text-2xl font-bold mb-8">
-            PHIM ĐANG CHIẾU
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="relative">
-                    <img alt="Movie poster for Nhà Gia Tiên" height="450"
-                        src="https://storage.googleapis.com/a1aa/image/V5MfKYY0leyIHTFCcMf0Dh7A8yhT36GgkSJuUIchzXo.jpg"
-                        width="300" />
-                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                        T18
-                    </div>
-                </div>
-                <p class="mt-4">
-                    NHÀ GIA TIÊN (T18)
-                </p>
-                <div class="flex justify-center space-x-4 mt-4">
-                    <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                        <i class="fas fa-play-circle mr-2">
-                        </i>
-                        Xem Trailer
-                    </button>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                        ĐẶT VÉ
-                    </button>
-                </div>
-            </div>
-            <div class="text-center">
-                <div class="relative">
-                    <img alt="Movie poster for Quỷ Nhập Tràng" height="450"
-                        src="https://storage.googleapis.com/a1aa/image/ggEng7TZDSIrWmYAe-jR281Owmxo78bwWUqLFvPxMO4.jpg"
-                        width="300" />
-                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                        T18
-                    </div>
-                </div>
-                <p class="mt-4">
-                    QUỶ NHẬP TRÀNG (T18)
-                </p>
-                <div class="flex justify-center space-x-4 mt-4">
-                    <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                        <i class="fas fa-play-circle mr-2">
-                        </i>
-                        Xem Trailer
-                    </button>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                        ĐẶT VÉ
-                    </button>
-                </div>
-            </div>
-            <div class="text-center">
-                <div class="relative">
-                    <img alt="Movie poster for Cưới Ma" height="450"
-                        src="https://storage.googleapis.com/a1aa/image/yQCEM2_foqlT7s8vLzwkJBJylXuLhN62SzULmKtjLWM.jpg"
-                        width="300" />
-                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                        T18
-                    </div>
-                </div>
-                <p class="mt-4">
-                    CƯỚI MA (T18)
-                </p>
-                <div class="flex justify-center space-x-4 mt-4">
-                    <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                        <i class="fas fa-play-circle mr-2">
-                        </i>
-                        Xem Trailer
-                    </button>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                        ĐẶT VÉ
-                    </button>
-                </div>
-            </div>
-            <div class="text-center">
-                <div class="relative">
-                    <img alt="Movie poster for Nữ Tu Bóng Tối" height="450"
-                        src="https://storage.googleapis.com/a1aa/image/_A60Vme6qRcZedNL3l9m_Ll59Rg5Id1afj1h0lrfGEg.jpg"
-                        width="300" />
-                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                        T16
-                    </div>
-                </div>
-                <p class="mt-4">
-                    NỮ TU BÓNG TỐI (T16)
-                </p>
-                <div class="flex justify-center space-x-4 mt-4">
-                    <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                        <i class="fas fa-play-circle mr-2">
-                        </i>
-                        Xem Trailer
-                    </button>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                        ĐẶT VÉ
-                    </button>
-                </div>
-            </div>
+        <div>
+    <!-- Phim đang chiếu -->
+    <h2 class="text-center text-2xl font-bold mb-8">PHIM ĐANG CHIẾU</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div v-for="movie in nowShowing" :key="movie.id" class="text-center">
+        <div class="relative">
+          <img :alt="'Movie poster for ' + movie.title" height="450" 
+               :src="movie.poster" width="300" />
+          <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
+            {{ movie.rating }}
+          </div>
         </div>
-        <div class="flex justify-center mt-8">
-            <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                XEM THÊM
+        <p class="mt-4">{{ movie.title }} ({{ movie.rating }})</p>
+        <div class="flex justify-center space-x-4 mt-4">
+          <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
+            <i class="fas fa-play-circle mr-2"></i>
+            Xem Trailer
+          </button>
+          <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+            ĐẶT VÉ
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center mt-8">
+      <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+        XEM THÊM
+      </button>
+    </div>
+
+    <!-- Phim sắp chiếu -->
+    <div class="pt-8 pb-9">
+      <h2 class="text-center text-2xl font-bold mb-8">PHIM SẮP CHIẾU</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div v-for="movie in comingSoon" :key="movie.id" class="text-center">
+          <div class="relative">
+            <img :alt="'Movie poster for ' + movie.title" height="450" 
+                 :src="movie.poster" width="300" />
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
+              {{ movie.rating }}
+            </div>
+          </div>
+          <p class="mt-4">{{ movie.title }} ({{ movie.rating }})</p>
+          <div class="flex justify-center space-x-4 mt-4">
+            <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
+              <i class="fas fa-play-circle mr-2"></i>
+              Xem Trailer
             </button>
+            <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+              ĐẶT VÉ
+            </button>
+          </div>
         </div>
-        <div class="pt-8 pb-9">
-            <h2 class="text-center text-2xl font-bold mb-8">
-                PHIM SẮP CHIẾU
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="relative">
-                        <img alt="Movie poster for Nhà Gia Tiên" height="450"
-                            src="https://storage.googleapis.com/a1aa/image/V5MfKYY0leyIHTFCcMf0Dh7A8yhT36GgkSJuUIchzXo.jpg"
-                            width="300" />
-                        <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                            T18
-                        </div>
-                    </div>
-                    <p class="mt-4">
-                        NHÀ GIA TIÊN (T18)
-                    </p>
-                    <div class="flex justify-center space-x-4 mt-4">
-                        <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                            <i class="fas fa-play-circle mr-2">
-                            </i>
-                            Xem Trailer
-                        </button>
-                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                            ĐẶT VÉ
-                        </button>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="relative">
-                        <img alt="Movie poster for Quỷ Nhập Tràng" height="450"
-                            src="https://storage.googleapis.com/a1aa/image/ggEng7TZDSIrWmYAe-jR281Owmxo78bwWUqLFvPxMO4.jpg"
-                            width="300" />
-                        <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                            T18
-                        </div>
-                    </div>
-                    <p class="mt-4">
-                        QUỶ NHẬP TRÀNG (T18)
-                    </p>
-                    <div class="flex justify-center space-x-4 mt-4">
-                        <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                            <i class="fas fa-play-circle mr-2">
-                            </i>
-                            Xem Trailer
-                        </button>
-                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                            ĐẶT VÉ
-                        </button>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="relative">
-                        <img alt="Movie poster for Cưới Ma" height="450"
-                            src="https://storage.googleapis.com/a1aa/image/yQCEM2_foqlT7s8vLzwkJBJylXuLhN62SzULmKtjLWM.jpg"
-                            width="300" />
-                        <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                            T18
-                        </div>
-                    </div>
-                    <p class="mt-4">
-                        CƯỚI MA (T18)
-                    </p>
-                    <div class="flex justify-center space-x-4 mt-4">
-                        <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                            <i class="fas fa-play-circle mr-2">
-                            </i>
-                            Xem Trailer
-                        </button>
-                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                            ĐẶT VÉ
-                        </button>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="relative">
-                        <img alt="Movie poster for Nữ Tu Bóng Tối" height="450"
-                            src="https://storage.googleapis.com/a1aa/image/_A60Vme6qRcZedNL3l9m_Ll59Rg5Id1afj1h0lrfGEg.jpg"
-                            width="300" />
-                        <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs">
-                            T16
-                        </div>
-                    </div>
-                    <p class="mt-4">
-                        NỮ TU BÓNG TỐI (T16)
-                    </p>
-                    <div class="flex justify-center space-x-4 mt-4">
-                        <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-                            <i class="fas fa-play-circle mr-2">
-                            </i>
-                            Xem Trailer
-                        </button>
-                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                            ĐẶT VÉ
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-center mt-8">
-                <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-                    XEM THÊM
-                </button>
-            </div>
-        </div>
+      </div>
+      <div class="flex justify-center mt-8">
+        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+          XEM THÊM
+        </button>
+      </div>
+    </div>
+  </div>
 
     </div>
     <FooterComponents />
@@ -242,13 +97,33 @@
 <script>
 import HeaderComponents from './HeaderComponent.vue';
 import FooterComponents from './FooterComponents.vue';
-
-
+import axios from 'axios';
 
 export default {
-    name: 'MovieComponent',
-    components: {
-        HeaderComponents, FooterComponents
+  name: 'MovieComponent',
+  components: {
+    HeaderComponents, 
+    FooterComponents
+  },
+  data() {
+    return {
+      nowShowing: [], // Danh sách phim đang chiếu
+      comingSoon: []  // Danh sách phim sắp chiếu
+    };
+  },
+  async created() {
+    try {
+      // Gọi API để lấy danh sách phim đang chiếu
+      const nowShowingResponse = await axios.get('/api/movies/now-showing');
+      this.nowShowing = nowShowingResponse.data;
+
+      // Gọi API để lấy danh sách phim sắp chiếu
+      const comingSoonResponse = await axios.get('/api/movies/coming-soon');
+      this.comingSoon = comingSoonResponse.data;
+    } catch (error) {
+      console.error('Lỗi khi tải dữ liệu phim:', error);
+      // Có thể thêm thông báo lỗi cho người dùng ở đây
     }
-}
+  }
+};
 </script>

@@ -130,7 +130,7 @@
                             <div class="mb-4">
                                 <label class="block mb-2">Trailer URL <span class="text-red-500">*</span>:</label>
                                 <div class="flex items-center">
-                                    
+
                                     <input type="file" @change="handleFileUpload('trailer', $event)" class="aa">
 
                                     <a v-if="form.trailerUrl" :href="form.trailerUrl" target="_blank"
@@ -231,44 +231,44 @@ export default {
             this.$refs.trailerFile.click();
         },
         handleFileUpload(field, event) {
-        const file = event.target.files[0]; // Get the selected file
+            const file = event.target.files[0]; // Get the selected file
 
-        if (file) {
-            const isImage = field === 'banner';
-            const isVideo = field === 'trailer';
-            
-            // Set file size limits
-            const maxImageSize = 5 * 1024 * 1024; // 5MB for images
-            const maxVideoSize = 50 * 1024 * 1024; // 50MB for videos
+            if (file) {
+                const isImage = field === 'banner';
+                const isVideo = field === 'trailer';
 
-            // Check file size based on type
-            if (isImage && file.size > maxImageSize) {
-                alert('Image file size exceeds the 5MB limit.');
-                return;
-            }
-            if (isVideo && file.size > maxVideoSize) {
-                alert('Video file size exceeds the 50MB limit.');
-                return;
-            }
+                // Set file size limits
+                const maxImageSize = 5 * 1024 * 1024; // 5MB for images
+                const maxVideoSize = 50 * 1024 * 1024; // 50MB for videos
 
-            // For images: Use FileReader to preview the image in base64 format
-            if (isImage) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.form[`${field}Url`] = e.target.result; // Set base64 preview for the image
-                    this.form[field] = file; // Store the actual image file for upload
-                };
-                reader.readAsDataURL(file); // Convert the image file to base64
-            }
+                // Check file size based on type
+                if (isImage && file.size > maxImageSize) {
+                    alert('Image file size exceeds the 5MB limit.');
+                    return;
+                }
+                if (isVideo && file.size > maxVideoSize) {
+                    alert('Video file size exceeds the 50MB limit.');
+                    return;
+                }
 
-            // For videos: Directly store the video file and display a video preview
-            if (isVideo) {
-                this.form[field] = file; // Store the actual video file for upload
-                const videoUrl = URL.createObjectURL(file); // Create a local URL for video preview
-                this.form[`${field}Url`] = videoUrl; // Set video URL for preview
+                // For images: Use FileReader to preview the image in base64 format
+                if (isImage) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.form[`${field}Url`] = e.target.result; // Set base64 preview for the image
+                        this.form[field] = file; // Store the actual image file for upload
+                    };
+                    reader.readAsDataURL(file); // Convert the image file to base64
+                }
+
+                // For videos: Directly store the video file and display a video preview
+                if (isVideo) {
+                    this.form[field] = file; // Store the actual video file for upload
+                    const videoUrl = URL.createObjectURL(file); // Create a local URL for video preview
+                    this.form[`${field}Url`] = videoUrl; // Set video URL for preview
+                }
             }
-        }
-    },
+        },
 
 
 
@@ -303,6 +303,9 @@ export default {
                     releaseDate: '',
                     duration: ''
                 };
+            } else if (type === 'delete' && movies) {
+                // Chỉ cần lưu movie_id để xóa
+                this.form.movieId = movies.movie_id;
             }
         },
 
@@ -389,9 +392,41 @@ export default {
             this.closeModal(); // Close the modal after submission
         },
 
-        handleDelete() {
-            // Logic xóa mục
-            console.log('Xóa mục');
+        // Trong phần methods của component
+        async handleDelete() {
+            const token = Cookies.get('authToken');
+            if (!token) {
+                alert('Token not found! Please log in.');
+                return;
+            }
+
+            // Decode the token to check role
+            const decodedToken = jwtDecode(token);
+            if (decodedToken.role !== 'admin') {
+                alert('You do not have the necessary permissions.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/movies/${this.form.movieId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Movie deleted successfully!');
+                    this.getallMovie(); // Refresh the movie list
+                } else {
+                    const errorData = await response.json();
+                    alert('Failed to delete movie: ' + (errorData.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error deleting movie:', error);
+                alert('An error occurred while deleting the movie.');
+            }
+
             this.closeModal();
         },
         async getallMovie() {

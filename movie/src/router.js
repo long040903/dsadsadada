@@ -11,6 +11,7 @@ import Showtimes from './view/ShowtimesView.vue';
 import HomeComponent from './components/admin/HomeComponent.vue';
 import LoginComponent from './components/admin/LoginComponent.vue';
 import CinemasAdmin from './view/admin/CinemasView.vue'
+import UserComponent from './components/admin/UserComponent.vue';
 
 
 const routes = [
@@ -73,6 +74,11 @@ const routes = [
         path: '/admin/login',
         name: 'LoginAdmin',
         component: LoginComponent,
+    },
+    {
+        path: '/admin/user',
+        name: 'UserPage',
+        component: UserComponent,
     },
 ];
 

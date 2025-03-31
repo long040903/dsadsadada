@@ -41,10 +41,15 @@
     <h2 class="mt-8 text-center text-2xl font-bold">PHIM ĐANG CHIẾU</h2>
     <div class="container w-[80%] mx-auto py-8">
       <div class="flex justify-center space-x-6">
-        <div v-for="movie in movies" :key="movie.id" class="relative flex-1">
+        <div
+          v-for="movie in movies"
+          :key="movie.movieId"
+          class="relative flex-1"
+        >
           <img
+            @click="goToDetails(movie.movieId)"
             :alt="movie.title"
-            class="w-full h-[423px] object-cover"
+            class="w-full h-[423px] object-cover cursor-pointer"
             :src="movie.bannerUrl"
           />
           <div
@@ -74,9 +79,12 @@
             </h3>
             <div class="flex justify-between space-x-4 mt-2">
               <button class="bg-yellow-500 text-black px-4 py-2 rounded flex-1">
-                Xem Trailer
+                <a target="_blank" :href="movie.trailerUrl"> Xem Trailer </a>
               </button>
-              <button class="bg-yellow-500 text-black px-4 py-2 rounded flex-1">
+              <button
+                @click="goToDetails(movie.movieId)"
+                class="bg-yellow-500 text-black px-4 py-2 rounded flex-1"
+              >
                 Đặt Vé
               </button>
             </div>
@@ -108,8 +116,9 @@
       >
         <div class="relative">
           <img
+            @click="goToDetails(movie.movieId)"
             :alt="movie.title"
-            class="rounded-t-lg h-[384px] w-full object-cover"
+            class="rounded-t-lg h-[384px] w-full object-cover cursor-pointer"
             :src="movie.bannerUrl"
           />
           <div
@@ -125,15 +134,18 @@
         </div>
         <div class="p-4">
           <p class="text-center">Khởi chiếu: {{ movie.releaseDate }}</p>
-          <h2 class="text-center font-bold">{{movie.title}}</h2>
+          <h2 class="text-center font-bold">{{ movie.title }}</h2>
           <div class="flex justify-center mt-4 space-x-2">
             <button
               class="bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
             >
-              <i class="fas fa-play-circle mr-2"> </i>
-              Xem Trailer
+              <a target="_blank" :href="movie.trailerUrl">
+                <i class="fas fa-play-circle mr-2"> </i>
+                Xem Trailer
+              </a>
             </button>
             <button
+              @click="goToDetails(movie.movieId)"
               class="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
             >
               Tìm Hiểu Thêm
@@ -478,6 +490,12 @@ export default {
           error.response ? error.response.data : error.message
         );
       }
+    },
+    goToDetails: function (movieId) {
+      this.$router.push({ name: "MovieDetailView", params: { id: movieId } });
+    },
+    viewTrailer: function (url) {
+      window.open(url, "_blank");
     },
   },
 };

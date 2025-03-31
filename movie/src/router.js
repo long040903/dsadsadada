@@ -12,6 +12,7 @@ import HomeComponent from './components/admin/HomeComponent.vue';
 import LoginComponent from './components/admin/LoginComponent.vue';
 import CinemasAdmin from './view/admin/CinemasView.vue'
 import UserComponent from './components/admin/UserComponent.vue';
+import ShowtimesComponent from './components/admin/ShowtimeComponent.vue'
 
 
 const routes = [
@@ -79,6 +80,11 @@ const routes = [
         path: '/admin/user',
         name: 'UserPage',
         component: UserComponent,
+    },
+    {
+        path: '/admin/showtime',
+        name: 'ShowtimePage',
+        component: ShowtimesComponent,
     },
 ];
 

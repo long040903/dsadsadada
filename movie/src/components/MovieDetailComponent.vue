@@ -21,7 +21,9 @@
           </div>
         </div>
         <div class="col-span-7 mt-4 md:mt-0 space-y-8">
-          <h1 class="text-3xl font-bold uppercase">{{ movie.title }} ({{ movie.rating }})</h1>
+          <h1 class="text-3xl font-bold uppercase">
+            {{ movie.title }} ({{ movie.rating }})
+          </h1>
           <div class="mt-2 space-y-4">
             <div class="flex items-center text-lg">
               <i class="fas fa-film mr-2"></i>
@@ -63,7 +65,11 @@
             </a>
           </div>
           <div class="mt-4">
-            <a class="flex items-cente" :href="movie.trailer_url" target="_blank">
+            <a
+              class="flex items-cente"
+              :href="movie.trailer_url"
+              target="_blank"
+            >
               <i class="fas fa-play-circle text-3xl mr-2 text-red-500"></i>
               <span class="text-xl underline">Xem Trailer</span>
             </a>
@@ -73,36 +79,41 @@
     </div>
 
     <!-- Lịch chiếu -->
-    <div class="min-h-screen flex flex-col items-center justify-center" v-if="showtimes">
-      <div class="w-full min-h-screen flex flex-col items-center justify-center text-white">
+    <div
+      class="min-h-screen flex flex-col items-center justify-center"
+      v-if="showtimes"
+    >
+      <div
+        class="w-full min-h-screen flex flex-col items-center justify-center text-white"
+      >
         <div class="text-center">
           <h1 class="text-4xl font-bold mb-8">LỊCH CHIẾU</h1>
           <div class="flex justify-center space-x-4 mb-8">
-            <div 
-              v-for="(date, index) in showDates" 
+            <div
+              v-for="(date, index) in showDates"
               :key="index"
               @click="selectDate(date)"
               :class="{
                 'bg-yellow-400 text-black': selectedDate === date,
-                'border border-yellow-400': selectedDate !== date
+                'border border-yellow-400': selectedDate !== date,
               }"
               class="px-4 py-2 rounded cursor-pointer"
             >
               {{ formatDate(date) }}
             </div>
           </div>
-          <button 
+          <button
             class="border border-yellow-400 px-4 py-2 rounded mb-8"
             @click="toggleLocation"
           >
-            {{ selectedLocation || 'CHỌN TỈNH THÀNH' }}
+            {{ selectedLocation || "CHỌN TỈNH THÀNH" }}
           </button>
         </div>
-        
+
         <div class="w-full max-w-4xl" v-if="filteredCinemas.length > 0">
           <h2 class="text-2xl font-bold mb-4">DANH SÁCH RẠP</h2>
-          <div 
-            v-for="cinema in filteredCinemas" 
+          <div
+            v-for="cinema in filteredCinemas"
             :key="cinema.id"
             class="bg-purple-700 p-4 mb-4 rounded"
           >
@@ -115,13 +126,16 @@
             <p class="mb-2">{{ cinema.address }}</p>
             <p class="mb-2">{{ cinema.room_type }}</p>
             <div class="grid grid-cols-6 gap-2">
-              <div 
-                v-for="time in cinema.showtimes" 
+              <div
+                v-for="time in cinema.showtimes"
                 :key="time"
                 class="border border-white px-2 py-1 rounded toggle-button"
                 @click="selectShowtime(cinema.id, time)"
                 :class="{
-                  'bg-yellow-500 text-black': isSelectedShowtime(cinema.id, time)
+                  'bg-yellow-500 text-black': isSelectedShowtime(
+                    cinema.id,
+                    time
+                  ),
                 }"
               >
                 {{ time }}
@@ -138,30 +152,32 @@
     <!-- Đặt vé -->
     <div
       class="booking-movie flex flex-col items-center p-8"
-      :class="{ 'active': showBookingSection }"
+      :class="{ active: showBookingSection }"
       id="booking-section"
     >
       <!-- Phần chọn ghế và combo -->
       <!-- ... (giữ nguyên phần này nhưng thêm v-model và methods tương ứng) ... -->
-      
+
       <div class="mt-8 text-center">
         <div class="font-bold">{{ movie?.title }}</div>
         <div>{{ selectedCinema?.name }}</div>
       </div>
-      
+
       <div
         id="booking-bar"
         class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 flex justify-between items-center"
       >
         <div class="text-center">
           <div>Thời gian giữ vé</div>
-          <div class="bg-yellow-500 text-black font-bold px-2 py-1">{{ countdown }}</div>
+          <div class="bg-yellow-500 text-black font-bold px-2 py-1">
+            {{ countdown }}
+          </div>
         </div>
         <div class="text-center">
           <div>Tạm tính</div>
           <div class="font-bold">{{ formatPrice(totalAmount) }} VND</div>
         </div>
-        <button 
+        <button
           class="bg-yellow-500 text-black font-bold px-4 py-2"
           @click="bookTickets"
           :disabled="!canBook"
@@ -171,7 +187,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="bg-gradient-1">
     <div class="mx-40">
       <FooterComponents />
@@ -182,13 +198,19 @@
 <script>
 import HeaderComponents from "./HeaderComponent.vue";
 import FooterComponents from "./FooterComponents.vue";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "MovieDetailComponent",
   components: {
     HeaderComponents,
     FooterComponents,
+  },
+  props: {
+    movieId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -199,7 +221,7 @@ export default {
       selectedCinema: null,
       selectedShowtime: null,
       showBookingSection: false,
-      countdown: '05:00',
+      countdown: "05:00",
       totalAmount: 0,
       selectedSeats: [],
       selectedCombos: [],
@@ -210,41 +232,52 @@ export default {
         adultTickets: 0,
         studentTickets: 0,
         coupleTickets: 0,
-        combos: {}
-      }
+        combos: {},
+      },
     };
   },
   computed: {
     filteredCinemas() {
       if (!this.showtimes || !this.selectedDate) return [];
-      
+
       return this.showtimes.locations
-        .filter(location => !this.selectedLocation || location.name === this.selectedLocation)
-        .flatMap(location => location.cinemas)
-        .filter(cinema => cinema.showtimes.some(st => st.date === this.selectedDate))
-        .map(cinema => ({
+        .filter(
+          (location) =>
+            !this.selectedLocation || location.name === this.selectedLocation
+        )
+        .flatMap((location) => location.cinemas)
+        .filter((cinema) =>
+          cinema.showtimes.some((st) => st.date === this.selectedDate)
+        )
+        .map((cinema) => ({
           ...cinema,
-          showtimes: cinema.showtimes
-            .find(st => st.date === this.selectedDate)?.times || []
+          showtimes:
+            cinema.showtimes.find((st) => st.date === this.selectedDate)
+              ?.times || [],
         }));
     },
     canBook() {
-      return this.selectedSeats.length > 0 && this.selectedCinema && this.selectedShowtime;
-    }
+      return (
+        this.selectedSeats.length > 0 &&
+        this.selectedCinema &&
+        this.selectedShowtime
+      );
+    },
   },
   async created() {
-    const movieId = this.$route.params.id;
+    const movieId = this.movieId;
+
     await this.fetchMovieDetails(movieId);
     await this.fetchShowtimes(movieId);
-    
+
     // Tạo danh sách ngày (7 ngày kể từ hôm nay)
     const today = new Date();
     this.showDates = Array.from({ length: 7 }, (_, i) => {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-      return date.toISOString().split('T')[0];
+      return date.toISOString().split("T")[0];
     });
-    
+
     this.selectedDate = this.showDates[0];
   },
   beforeUnmount() {
@@ -253,24 +286,26 @@ export default {
   methods: {
     async fetchMovieDetails(movieId) {
       try {
-        const response = await axios.get(`/api/movies/${movieId}`);
+        const response = await axios.get(`http://localhost:3000/api/movies/${movieId}`);
         this.movie = response.data;
       } catch (error) {
-        console.error('Error fetching movie details:', error);
+        console.error("Error fetching movie details:", error);
       }
     },
     async fetchShowtimes(movieId) {
       try {
-        const response = await axios.get(`/api/movies/${movieId}/showtimes`);
+        const response = await axios.get(`http://localhost:3000/api/showtimes/${movieId}`);
         this.showtimes = response.data;
       } catch (error) {
-        console.error('Error fetching showtimes:', error);
+        console.error("Error fetching showtimes:", error);
       }
     },
     formatDate(dateStr) {
       const date = new Date(dateStr);
-      const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
-      return `${date.getDate()}/${date.getMonth() + 1}<br>${days[date.getDay()]}`;
+      const days = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+      return `${date.getDate()}/${date.getMonth() + 1}<br>${
+        days[date.getDay()]
+      }`;
     },
     selectDate(date) {
       this.selectedDate = date;
@@ -283,20 +318,22 @@ export default {
       // Có thể implement bằng dialog hoặc dropdown
     },
     selectShowtime(cinemaId, time) {
-      this.selectedCinema = this.cinemas.find(c => c.id === cinemaId);
+      this.selectedCinema = this.cinemas.find((c) => c.id === cinemaId);
       this.selectedShowtime = time;
       this.showBookingSection = true;
       this.startCountdown();
     },
     isSelectedShowtime(cinemaId, time) {
-      return this.selectedCinema?.id === cinemaId && this.selectedShowtime === time;
+      return (
+        this.selectedCinema?.id === cinemaId && this.selectedShowtime === time
+      );
     },
     startCountdown() {
       if (this.timer) clearInterval(this.timer);
-      
+
       let minutes = 5;
       let seconds = 0;
-      
+
       this.timer = setInterval(() => {
         if (seconds === 0) {
           if (minutes === 0) {
@@ -309,8 +346,10 @@ export default {
         } else {
           seconds--;
         }
-        
-        this.countdown = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        this.countdown = `${minutes.toString().padStart(2, "0")}:${seconds
+          .toString()
+          .padStart(2, "0")}`;
       }, 1000);
     },
     formatPrice(price) {
@@ -325,23 +364,23 @@ export default {
           date: this.selectedDate,
           seats: this.selectedSeats,
           combos: this.selectedCombos,
-          totalAmount: this.totalAmount
+          totalAmount: this.totalAmount,
         };
-        
-        const response = await axios.post('/api/bookings', bookingData);
-        
+
+        const response = await axios.post("/api/bookings", bookingData);
+
         if (response.data.success) {
           this.$router.push(`/booking-confirmation/${response.data.bookingId}`);
         } else {
-          alert('Đặt vé thất bại: ' + response.data.message);
+          alert("Đặt vé thất bại: " + response.data.message);
         }
       } catch (error) {
-        console.error('Error booking tickets:', error);
-        alert('Có lỗi xảy ra khi đặt vé');
+        console.error("Error booking tickets:", error);
+        alert("Có lỗi xảy ra khi đặt vé");
       }
     },
     // Các methods khác để xử lý chọn ghế, combo...
-  }
+  },
 };
 </script>
 

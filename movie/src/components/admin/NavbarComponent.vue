@@ -14,7 +14,7 @@
                     </a>
                 </li>
                 <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
-                    <a class="flex items-center" href="#">
+                    <a class="flex items-center" href="/admin/user">
                         <i class="fas fa-chevron-right mr-2"></i>
                         <span>Quản lý người dùng</span>
                     </a>

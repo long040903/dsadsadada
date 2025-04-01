@@ -1,169 +1,81 @@
 <template>
-    <HeaderComponents />
-    <div class="container mx-auto p-4">
-        <div class="flex justify-center mb-8 space-x-4">
-            <button class="bg-gray-200 text-black font-bold py-2 px-4 rounded">
-                ĐẶT VÉ NHANH
-            </button>
-            <select class="bg-gray-200 text-black py-2 px-4 rounded">
-                <option>
-                    1. Chọn Rạp
-                </option>
-            </select>
-            <select class="bg-gray-200 text-black py-2 px-4 rounded">
-                <option>
-                    2. Chọn Phim
-                </option>
-            </select>
-            <select class="bg-gray-200 text-black py-2 px-4 rounded">
-                <option>
-                    3. Chọn Ngày
-                </option>
-            </select>
-            <select class="bg-gray-200 text-black py-2 px-4 rounded">
-                <option>
-                    4. Chọn Suất
-                </option>
-            </select>
-            <button class="bg-purple-600 text-white font-bold py-2 px-4 rounded">
-                ĐẶT NGAY
-            </button>
-        </div>
-        <div>
-    <!-- Phim đang chiếu -->
-    <h2 class="text-center text-2xl font-bold mb-8">PHIM ĐANG CHIẾU</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div v-for="movie in getMovies" :key="movie.id" class="text-center">
-        <div class="relative">
-          <img :alt="'Movie poster for ' + movie.title" height="450" 
-               :src="movie.poster" width="300" />
-          
-        </div>
-        <p class="mt-4">{{ movie.title }} </p>
-        <div class="flex justify-center space-x-4 mt-4">
-          <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-            <i class="fas fa-play-circle mr-2"></i>
-            Xem Trailer
-          </button>
-          <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-            ĐẶT VÉ
-          </button>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div v-for="(movie, index) in uniqueMovies" :key="index">
+      <img :alt="`Movie poster for ${movie.title}`" class="w-full rounded-md mb-4"
+           :src="movie.banner_url || defaultImage" width="400" height="600" />
+      <div class="text-lg font-bold mb-2">{{ movie.title }}</div>
+      <div class="text-sm mb-1">{{ movie.genre }}</div>
+      <div class="text-sm mb-1">{{ movie.duration }} phút</div>
+      <div class="text-sm mb-1">Năm: {{ movie.release_year }}</div>
+      <div class="text-sm">
+        T18: Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)
       </div>
-    </div>
-    <div class="flex justify-center mt-8">
-      <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-        XEM THÊM
-      </button>
     </div>
 
-    <!-- Phim sắp chiếu -->
-    <div class="pt-8 pb-9">
-      <h2 class="text-center text-2xl font-bold mb-8">PHIM SẮP CHIẾU</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div v-for="movie in getMovies" :key="movie.id" class="text-center">
-          <div class="relative">
-            <img :alt="'Movie poster for ' + movie.title" height="450" 
-                 :src="movie.poster" width="300" />
-           
+    <div class="col-span-2">
+      <div v-for="(cinema, index) in uniqueCinemas" :key="index" class="mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="text-xl font-bold mb-2">Cinestar</div>
+            <div class="text-lg font-bold mb-1">{{ cinema.name }}</div>
+            <div class="text-sm mb-2">{{ cinema.address }}</div>
           </div>
-          <p class="mt-4">{{ movie.title }}</p>
-          <div class="flex justify-center space-x-4 mt-4">
-            <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
-              <i class="fas fa-play-circle mr-2"></i>
-              Xem Trailer
-            </button>
-            <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-              ĐẶT VÉ
-            </button>
+          <div class="grid grid-cols-6 gap-2">
+            <div v-for="showtime in filterShowtimesByCinema(cinema.cinema_id)" :key="showtime.showtime_id"
+                 class="bg-gray-800 text-center py-2 rounded-md">
+              {{ formatTime(showtime.show_time) }}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="flex justify-center mt-8">
-        <button class="bg-yellow-500 text-black py-2 px-4 rounded">
-          XEM THÊM
-        </button>
+        <hr class="border-gray-600 my-4" />
       </div>
     </div>
   </div>
-
-    </div>
-    <FooterComponents />
 </template>
-<script>
-import HeaderComponents from './HeaderComponent.vue';
-import FooterComponents from './FooterComponents.vue';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
 
+<script>
+import axios from "axios";
 
 export default {
-  name: 'MovieComponent',
-  components: {
-    HeaderComponents, 
-    FooterComponents
-  },
   data() {
-  return {
-    getMovies: [], // Danh sách phim
-    isLoading: false, // Thêm trạng thái loading
-    error: null // Thêm trạng thái lỗi
-  };
-},
-async created() {
-  this.isLoading = true;
-  this.error = null;
-  
-  try {
-    // Sử dụng biến môi trường cho base URL
-    const apiUrl = import.meta.env.VITE_API_BASE_URL + '/api/movies';
-    
-    // Thêm token vào header nếu API yêu cầu xác thực
-    const token = Cookies.get('authToken');
-    
-    const response = await axios.get(apiUrl, {
-      params: { 
-        page: 1, 
-        limit: 10 
-      },
-      headers: token ? { 
-        Authorization: `Bearer ${token}` 
-      } : {}
-    });
-    
-    console.log("Dữ liệu API:", response.data);
-    
-    // Gán dữ liệu phim
-    this.getMovies = response.data.movies || [];
-    
-    // Hiển thị thông báo thành công (nếu cần)
-    toast.success('Tải phim thành công!');
-    
-  } catch (error) {
-    console.error('Lỗi khi tải danh sách phim:', {
-      url: error.config?.url,
-      status: error.response?.status,
-      data: error.response?.data
-    });
-    
-    this.error = error.response?.data?.message || 'Lỗi khi tải danh sách phim';
-    
-    // Hiển thị thông báo lỗi
-    toast.error(this.error);
-    
-    // Nếu lỗi 401 (Unauthorized) thì chuyển hướng sang trang login
-    if (error.response?.status === 401) {
-      setTimeout(() => {
-        this.$router.push('/login');
-      }, 1500);
-    }
-  } finally {
-    this.isLoading = false;
-  }
-}
-
-
+    return {
+      showtimes: [],
+      defaultImage: "https://via.placeholder.com/400x600", // Ảnh mặc định nếu không có banner_url
+    };
+  },
+  computed: {
+    uniqueMovies() {
+      return [...new Map(this.showtimes.map((s) => [s.Movie.movie_id, s.Movie])).values()];
+    },
+    uniqueCinemas() {
+      return [...new Map(this.showtimes.map((s) => [s.Cinema.cinema_id, s.Cinema])).values()];
+    },
+  },
+  methods: {
+    async fetchShowtimes() {
+      try {
+        const response = await axios.get("http://localhost:3000/api/showtimes");
+        this.showtimes = response.data; 
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu lịch chiếu:", error);
+      }
+    },
+    filterShowtimesByCinema(cinemaId) {
+      return this.showtimes.filter((s) => s.cinema_id === cinemaId);
+    },
+    formatTime(timeString) {
+      return timeString.slice(0, 5); // Chuyển "18:00:00" thành "18:00"
+    },
+  },
+  mounted() {
+    this.fetchShowtimes();
+  },
 };
 </script>
+
+<style scoped>
+.bg-gray-800 {
+  background-color: #333;
+  color: white;
+}
+</style>

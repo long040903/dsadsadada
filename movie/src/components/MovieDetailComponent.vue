@@ -1,351 +1,187 @@
 <template>
   <HeaderComponents />
-  <div class="main-dc-1"></div>
-  <div class="main-dc-2"></div>
-  <div class="main-dc-3"></div>
+  
   <div class="p-4">
-    <div class="mx-40 p-4 rounded-lg" v-if="movie">
-      <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-5">
+    <!-- Loading state -->
+    <div v-if="isLoading" class="text-center py-8">
+      Đang tải chi tiết phim...
+    </div>
+    
+    <!-- Error state -->
+    <div v-else-if="error" class="text-red-500 text-center py-4">
+      {{ error }}
+    </div>
+    
+    <!-- Movie detail content -->
+    <div v-else-if="movie" class="max-w-5xl mx-auto bg-[#1c2541] p-4 rounded-lg">
+      <div class="flex flex-col md:flex-row">
+        <!-- Movie poster -->
+        <div class="md:w-1/2">
           <div class="relative">
-            <img
-              :alt="'Movie poster for ' + movie.title"
-              class="rounded-lg w-full"
-              :src="movie.poster"
-            />
-            <div
-              class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded"
-            >
-              {{ movie.rating }}
+            <img :alt="'Poster phim ' + movie.title" 
+                 class="rounded-lg"
+                 height="600"
+                 :src="movie.poster || placeholderImage"
+                 width="400" />
+            <div class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded">
+              {{ movie.rating || 'T18' }}
             </div>
           </div>
         </div>
-        <div class="col-span-7 mt-4 md:mt-0 space-y-8">
-          <h1 class="text-3xl font-bold uppercase">{{ movie.title }} ({{ movie.rating }})</h1>
-          <div class="mt-2 space-y-4">
-            <div class="flex items-center text-lg">
+        
+        <!-- Movie info -->
+        <div class="md:w-1/2 md:pl-8 mt-4 md:mt-0">
+          <h1 class="text-3xl font-bold">
+            {{ movie.title }} <span v-if="movie.rating">({{ movie.rating }})</span>
+          </h1>
+          
+          <!-- Basic info -->
+          <div class="mt-2">
+            <div v-if="movie.genre" class="flex items-center text-sm">
               <i class="fas fa-film mr-2"></i>
               {{ movie.genre }}
             </div>
-            <div class="flex items-center text-lg">
+            <div v-if="movie.duration" class="flex items-center text-sm mt-1">
               <i class="fas fa-clock mr-2"></i>
-              {{ movie.duration }}'
+              {{ movie.duration }} phút
             </div>
-            <div class="flex items-center text-lg">
+            <div class="flex items-center text-sm mt-1">
               <i class="fas fa-globe mr-2"></i>
-              {{ movie.country }}
+              {{ movie.country || 'Việt Nam' }}
             </div>
-            <div class="flex items-center text-lg">
-              <i class="fas fa-flag mr-2"></i>
-              {{ movie.language }}
-            </div>
-            <div
-              class="flex items-center text-sm mt-1 bg-yellow-500 text-black px-2 py-1 rounded w-fit"
-            >
+            <div v-if="movie.rating === 'T18'" class="flex items-center text-sm mt-1 bg-yellow-500 text-black px-2 py-1 rounded">
               <i class="fas fa-exclamation-triangle mr-2"></i>
-              {{ movie.rating_description }}
+              T18: Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)
             </div>
           </div>
+          
+          <!-- Description -->
           <div class="mt-4">
             <h2 class="text-xl font-bold">MÔ TẢ</h2>
-            <p class="mt-2">Đạo diễn: {{ movie.director }}</p>
-            <p>Diễn viên: {{ movie.actors }}</p>
-            <p>Khởi chiếu: {{ movie.release_date }}</p>
+            <p v-if="movie.director" class="mt-2">
+              <strong>Đạo diễn:</strong> {{ movie.director }}
+            </p>
+            <p v-if="movie.cast">
+              <strong>Diễn viên:</strong> {{ movie.cast }}
+            </p>
+            <p v-if="movie.release_date">
+              <strong>Khởi chiếu:</strong> {{ formatDate(movie.release_date) }}
+            </p>
           </div>
+          
+          <!-- Plot -->
           <div class="mt-4">
             <h2 class="text-xl font-bold">NỘI DUNG PHIM</h2>
-            <p class="mt-2">{{ movie.description }}</p>
-            <a
-              class="mt-2 text-sm hover:text-yellow-400 inline-block underline"
-              href="#"
-            >
-              Xem thêm
-            </a>
+            <p class="mt-2">
+              {{ movie.description || 'Nội dung đang được cập nhật...' }}
+            </p>
           </div>
+          
+          <!-- Trailer -->
           <div class="mt-4">
-            <a class="flex items-cente" :href="movie.trailer_url" target="_blank">
-              <i class="fas fa-play-circle text-3xl mr-2 text-red-500"></i>
-              <span class="text-xl underline">Xem Trailer</span>
+            <a v-if="movie.trailer_url" 
+               class="flex items-center text-red-500" 
+               :href="movie.trailer_url" 
+               target="_blank">
+              <i class="fas fa-play-circle text-2xl mr-2"></i>
+              Xem Trailer
             </a>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Lịch chiếu -->
-    <div class="min-h-screen flex flex-col items-center justify-center" v-if="showtimes">
-      <div class="w-full min-h-screen flex flex-col items-center justify-center text-white">
-        <div class="text-center">
-          <h1 class="text-4xl font-bold mb-8">LỊCH CHIẾU</h1>
-          <div class="flex justify-center space-x-4 mb-8">
-            <div 
-              v-for="(date, index) in showDates" 
-              :key="index"
-              @click="selectDate(date)"
-              :class="{
-                'bg-yellow-400 text-black': selectedDate === date,
-                'border border-yellow-400': selectedDate !== date
-              }"
-              class="px-4 py-2 rounded cursor-pointer"
-            >
-              {{ formatDate(date) }}
-            </div>
-          </div>
-          <button 
-            class="border border-yellow-400 px-4 py-2 rounded mb-8"
-            @click="toggleLocation"
-          >
-            {{ selectedLocation || 'CHỌN TỈNH THÀNH' }}
-          </button>
-        </div>
-        
-        <div class="w-full max-w-4xl" v-if="filteredCinemas.length > 0">
-          <h2 class="text-2xl font-bold mb-4">DANH SÁCH RẠP</h2>
-          <div 
-            v-for="cinema in filteredCinemas" 
-            :key="cinema.id"
-            class="bg-purple-700 p-4 mb-4 rounded"
-          >
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-bold text-yellow-400">
-                {{ cinema.name }}
-              </h3>
-              <i class="fas fa-chevron-down"></i>
-            </div>
-            <p class="mb-2">{{ cinema.address }}</p>
-            <p class="mb-2">{{ cinema.room_type }}</p>
-            <div class="grid grid-cols-6 gap-2">
-              <div 
-                v-for="time in cinema.showtimes" 
-                :key="time"
-                class="border border-white px-2 py-1 rounded toggle-button"
-                @click="selectShowtime(cinema.id, time)"
-                :class="{
-                  'bg-yellow-500 text-black': isSelectedShowtime(cinema.id, time)
-                }"
-              >
-                {{ time }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else class="text-center py-8">
-          <p>Không có lịch chiếu nào cho ngày đã chọn</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Đặt vé -->
-    <div
-      class="booking-movie flex flex-col items-center p-8"
-      :class="{ 'active': showBookingSection }"
-      id="booking-section"
-    >
-      <!-- Phần chọn ghế và combo -->
-      <!-- ... (giữ nguyên phần này nhưng thêm v-model và methods tương ứng) ... -->
-      
-      <div class="mt-8 text-center">
-        <div class="font-bold">{{ movie?.title }}</div>
-        <div>{{ selectedCinema?.name }}</div>
-      </div>
-      
-      <div
-        id="booking-bar"
-        class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 flex justify-between items-center"
-      >
-        <div class="text-center">
-          <div>Thời gian giữ vé</div>
-          <div class="bg-yellow-500 text-black font-bold px-2 py-1">{{ countdown }}</div>
-        </div>
-        <div class="text-center">
-          <div>Tạm tính</div>
-          <div class="font-bold">{{ formatPrice(totalAmount) }} VND</div>
-        </div>
-        <button 
-          class="bg-yellow-500 text-black font-bold px-4 py-2"
-          @click="bookTickets"
-          :disabled="!canBook"
-        >
-          ĐẶT VÉ
-        </button>
       </div>
     </div>
   </div>
   
-  <div class="bg-gradient-1">
-    <div class="mx-40">
-      <FooterComponents />
-    </div>
-  </div>
+  <FooterComponents />
 </template>
 
 <script>
-import HeaderComponents from "./HeaderComponent.vue";
-import FooterComponents from "./FooterComponents.vue";
+import HeaderComponents from './HeaderComponent.vue';
+import FooterComponents from './FooterComponents.vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
-  name: "MovieDetailComponent",
+  name: 'MovieDetail', // Đổi tên component cho rõ ràng
   components: {
-    HeaderComponents,
-    FooterComponents,
+    HeaderComponents, 
+    FooterComponents
   },
   data() {
     return {
-      movie: null,
-      showtimes: null,
-      selectedDate: null,
-      selectedLocation: null,
-      selectedCinema: null,
-      selectedShowtime: null,
-      showBookingSection: false,
-      countdown: '05:00',
-      totalAmount: 0,
-      selectedSeats: [],
-      selectedCombos: [],
-      showDates: [],
-      cinemas: [],
-      timer: null,
-      bookingData: {
-        adultTickets: 0,
-        studentTickets: 0,
-        coupleTickets: 0,
-        combos: {}
-      }
+      movie: null, // Thay getMovies bằng movie object
+      isLoading: false,
+      error: null,
+      placeholderImage: 'https://via.placeholder.com/400x600?text=No+Poster'
     };
   },
-  computed: {
-    filteredCinemas() {
-      if (!this.showtimes || !this.selectedDate) return [];
-      
-      return this.showtimes.locations
-        .filter(location => !this.selectedLocation || location.name === this.selectedLocation)
-        .flatMap(location => location.cinemas)
-        .filter(cinema => cinema.showtimes.some(st => st.date === this.selectedDate))
-        .map(cinema => ({
-          ...cinema,
-          showtimes: cinema.showtimes
-            .find(st => st.date === this.selectedDate)?.times || []
-        }));
-    },
-    canBook() {
-      return this.selectedSeats.length > 0 && this.selectedCinema && this.selectedShowtime;
+  methods: {
+    formatDate(dateString) {
+      if (!dateString) return 'Đang cập nhật';
+      const options = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('vi-VN', options);
     }
   },
   async created() {
-    const movieId = this.$route.params.id;
-    await this.fetchMovieDetails(movieId);
-    await this.fetchShowtimes(movieId);
+    this.isLoading = true;
+    this.error = null;
     
-    // Tạo danh sách ngày (7 ngày kể từ hôm nay)
-    const today = new Date();
-    this.showDates = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      return date.toISOString().split('T')[0];
-    });
-    
-    this.selectedDate = this.showDates[0];
-  },
-  beforeUnmount() {
-    if (this.timer) clearInterval(this.timer);
-  },
-  methods: {
-    async fetchMovieDetails(movieId) {
-      try {
-        const response = await axios.get(`/api/movies/${movieId}`);
-        this.movie = response.data;
-      } catch (error) {
-        console.error('Error fetching movie details:', error);
-      }
-    },
-    async fetchShowtimes(movieId) {
-      try {
-        const response = await axios.get(`/api/movies/${movieId}/showtimes`);
-        this.showtimes = response.data;
-      } catch (error) {
-        console.error('Error fetching showtimes:', error);
-      }
-    },
-    formatDate(dateStr) {
-      const date = new Date(dateStr);
-      const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
-      return `${date.getDate()}/${date.getMonth() + 1}<br>${days[date.getDay()]}`;
-    },
-    selectDate(date) {
-      this.selectedDate = date;
-      this.selectedCinema = null;
-      this.selectedShowtime = null;
-      this.showBookingSection = false;
-    },
-    toggleLocation() {
-      // Logic để hiển thị modal chọn tỉnh thành
-      // Có thể implement bằng dialog hoặc dropdown
-    },
-    selectShowtime(cinemaId, time) {
-      this.selectedCinema = this.cinemas.find(c => c.id === cinemaId);
-      this.selectedShowtime = time;
-      this.showBookingSection = true;
-      this.startCountdown();
-    },
-    isSelectedShowtime(cinemaId, time) {
-      return this.selectedCinema?.id === cinemaId && this.selectedShowtime === time;
-    },
-    startCountdown() {
-      if (this.timer) clearInterval(this.timer);
+    try {
+      // Lấy movie_id từ route params
+      const movieId = this.$route.params.id;
       
-      let minutes = 5;
-      let seconds = 0;
-      
-      this.timer = setInterval(() => {
-        if (seconds === 0) {
-          if (minutes === 0) {
-            clearInterval(this.timer);
-            this.showBookingSection = false;
-            return;
-          }
-          minutes--;
-          seconds = 59;
-        } else {
-          seconds--;
-        }
-        
-        this.countdown = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }, 1000);
-    },
-    formatPrice(price) {
-      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
-    async bookTickets() {
-      try {
-        const bookingData = {
-          movieId: this.movie.id,
-          cinemaId: this.selectedCinema.id,
-          showtime: this.selectedShowtime,
-          date: this.selectedDate,
-          seats: this.selectedSeats,
-          combos: this.selectedCombos,
-          totalAmount: this.totalAmount
-        };
-        
-        const response = await axios.post('/api/bookings', bookingData);
-        
-        if (response.data.success) {
-          this.$router.push(`/booking-confirmation/${response.data.bookingId}`);
-        } else {
-          alert('Đặt vé thất bại: ' + response.data.message);
-        }
-      } catch (error) {
-        console.error('Error booking tickets:', error);
-        alert('Có lỗi xảy ra khi đặt vé');
+      if (!movieId) {
+        throw new Error('Không tìm thấy ID phim');
       }
-    },
-    // Các methods khác để xử lý chọn ghế, combo...
+
+      // Sửa lại API endpoint để lấy chi tiết 1 phim
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/movies/${movieId}`;
+      
+      // Thêm token vào header nếu API yêu cầu xác thực
+      const token = Cookies.get('authToken');
+      
+      const response = await axios.get(apiUrl, {
+        headers: token ? { 
+          Authorization: `Bearer ${token}` 
+        } : {}
+      });
+      
+      console.log("Dữ liệu chi tiết phim:", response.data);
+      
+      // Gán dữ liệu phim (không cần .movies vì đây là 1 object)
+      this.movie = response.data;
+      
+      // Hiển thị thông báo thành công
+      toast.success('Tải chi tiết phim thành công!');
+      
+    } catch (error) {
+      console.error('Lỗi khi tải chi tiết phim:', {
+        url: error.config?.url,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      
+      this.error = error.response?.data?.message || error.message || 'Lỗi khi tải chi tiết phim';
+      
+      // Hiển thị thông báo lỗi
+      toast.error(this.error);
+      
+      // Nếu lỗi 401 (Unauthorized) thì chuyển hướng sang trang login
+      if (error.response?.status === 401) {
+        setTimeout(() => {
+          this.$router.push('/login');
+        }, 1500);
+      }
+    } finally {
+      this.isLoading = false;
+    }
   }
 };
 </script>
 
-
 <style scoped>
+/* Thêm các style tùy chỉnh nếu cần */
 @import "../assets/css/movie-detail.css";
 </style>

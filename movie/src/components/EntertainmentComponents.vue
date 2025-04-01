@@ -28,6 +28,9 @@
 import HeaderComponents from './HeaderComponent.vue';
 import FooterComponents from './FooterComponents.vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
     name: 'EntertainmentComponents',
@@ -37,25 +40,61 @@ export default {
     },
     data() {
         return {
-            entertainments: []
+            entertainments: [],
+            isLoading: false, // Thêm trạng thái loading
+            error: null // Thêm trạng thái lỗi
         };
     },
-    methods: {
-        async fetchEntertainment() {
-            try {
-                const response = await axios.get('https://api.example.com/entertainment');
-                this.entertainments = response.data;
-            } catch (error) {
-                console.error('Lỗi khi lấy dữ liệu:', error);
-            }
-        },
-        getBgColor(index) {
-            const colors = ['bg-yellow-400', 'bg-orange-400', 'bg-blue-500'];
-            return colors[index % colors.length];
-        }
-    },
-    mounted() {
-        this.fetchEntertainment();
+    async created() {
+    this.isLoading = true;
+    this.error = null;
+  
+  try {
+    // Sử dụng biến môi trường cho base URL
+    const apiUrl = import.meta.env.VITE_API_BASE_URL + '/api/entertainments';
+    
+    // Thêm token vào header nếu API yêu cầu xác thực
+    const token = Cookies.get('authToken');
+    
+    const response = await axios.get(apiUrl, {
+      params: { 
+        page: 1, 
+        limit: 10 
+      },
+      headers: token ? { 
+        Authorization: `Bearer ${token}` 
+      } : {}
+    });
+    
+    console.log("Dữ liệu API:", response.data);
+    
+    // Gán dữ liệu khu vui chơi
+    this.getEntertainment = response.data.entertainments || [];
+    
+    // // Hiển thị thông báo thành công (nếu cần)
+    // toast.success('Tải khu vui chơi thành công!');
+    
+  } catch (error) {
+    console.error('Lỗi khi tải khu vui chơi:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data
+    });
+    
+    this.error = error.response?.data?.message || 'Lỗi khi tải khu vui chơi';
+    
+    // Hiển thị thông báo lỗi
+    toast.error(this.error);
+    
+    // Nếu lỗi 401 (Unauthorized) thì chuyển hướng sang trang login
+    if (error.response?.status === 401) {
+      setTimeout(() => {
+        this.$router.push('/login');
+      }, 1500);
     }
+  } finally {
+    this.isLoading = false;
+  }
+}
 };
 </script>

@@ -108,15 +108,11 @@
     <h2 class="mt-8 text-center text-2xl font-bold">PHIM ĐANG CHIẾU</h2>
     <div class="container w-[80%] mx-auto py-8">
       <div class="flex justify-center space-x-6">
-        <div
-          v-for="movie in movies"
-          :key="movie.movieId"
-          class="relative flex-1"
-        >
+        <div v-for="movie in movies" 
+        :key="movie.movie_id"   class="relative flex-1">
           <img
-            @click="goToDetails(movie.movieId)"
             :alt="movie.title"
-            class="w-full h-[423px] object-cover cursor-pointer"
+            class="w-full h-[423px] object-cover"
             :src="movie.bannerUrl"
           />
           <div
@@ -145,13 +141,10 @@
               {{ movie.title }}
             </h3>
             <div class="flex justify-between space-x-4 mt-2">
-              <button class="bg-yellow-500 text-black px-4 py-2 rounded flex-1">
-                <a target="_blank" :href="movie.trailerUrl"> Xem Trailer </a>
+              <button class="bg-yellow-500 text-black px-4 py-2 rounded flex-1" @click="viewTrailer(movie)">
+                Xem Trailer
               </button>
-              <button
-                @click="goToDetails(movie.movieId)"
-                class="bg-yellow-500 text-black px-4 py-2 rounded flex-1"
-              >
+              <button class="bg-yellow-500 text-black px-4 py-2 rounded flex-1" @click="bookTicket(movie.movieId)">
                 Đặt Vé
               </button>
             </div>
@@ -183,9 +176,8 @@
       >
         <div class="relative">
           <img
-            @click="goToDetails(movie.movieId)"
             :alt="movie.title"
-            class="rounded-t-lg h-[384px] w-full object-cover cursor-pointer"
+            class="rounded-t-lg h-[384px] w-full object-cover"
             :src="movie.bannerUrl"
           />
           <div
@@ -201,18 +193,15 @@
         </div>
         <div class="p-4">
           <p class="text-center">Khởi chiếu: {{ movie.releaseDate }}</p>
-          <h2 class="text-center font-bold">{{ movie.title }}</h2>
+          <h2 class="text-center font-bold">{{movie.title}}</h2>
           <div class="flex justify-center mt-4 space-x-2">
             <button
               class="bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
-            >
-              <a target="_blank" :href="movie.trailerUrl">
-                <i class="fas fa-play-circle mr-2"> </i>
-                Xem Trailer
-              </a>
+              @click="viewTrailer(movie)"  >
+              <i class="fas fa-play-circle mr-2"> </i>
+              Xem Trailer
             </button>
             <button
-              @click="goToDetails(movie.movieId)"
               class="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
               @click="bookTicket(movie.movieId)"   >
               Tìm Hiểu Thêm
@@ -697,12 +686,94 @@ resetTimeSelection() {
         );
       }
     },
-    goToDetails: function (movieId) {
-      this.$router.push({ name: "MovieDetailView", params: { id: movieId } });
+
+    // Helper methods
+    resetSelection() {
+      this.selectedMovie = null;
+      this.selectedDate = null;
+      this.selectedTime = null;
+      this.filteredMovies = [];
+      this.availableDates = [];
+      this.availableTimes = [];
     },
-    viewTrailer: function (url) {
-      window.open(url, "_blank");
+
+    resetTimeSelection() {
+      this.selectedDate = null;
+      this.selectedTime = null;
+      this.availableDates = [];
+      this.availableTimes = [];
     },
+
+    // Chuẩn hóa dữ liệu showtimes từ API
+    normalizeShowtimesData(data) {
+      // Xử lý nhiều định dạng response khác nhau
+      const rawData = data?.data || data?.showtimes || data?.results || data;
+      return Array.isArray(rawData) ? rawData : [];
+    },
+
+    // Lọc danh sách phim duy nhất từ showtimes
+    getUniqueMoviesFromShowtimes(showtimes) {
+      const movieMap = new Map();
+      
+      showtimes.forEach(showtime => {
+        // Chỉ lấy phim thuộc rạp đã chọn
+        if (showtime.cinema_id == this.selectedCinema && 
+            showtime.movie_id && 
+            showtime.Movie &&
+            !movieMap.has(showtime.movie_id)) {
+          
+          movieMap.set(showtime.movie_id, {
+            movie_id: showtime.movie_id,
+            title: showtime.Movie.title,
+            duration: showtime.Movie.duration,
+            banner_url: showtime.Movie.banner_url
+          });
+        }
+      });
+      
+      return Array.from(movieMap.values());
+    },
+
+    // Lọc danh sách ngày duy nhất từ showtimes
+    getUniqueDatesFromShowtimes(showtimes) {
+      const dates = showtimes
+        .filter(st => st.cinema_id == this.selectedCinema && st.movie_id == this.selectedMovie)
+        .map(st => st.show_date);
+      
+      return [...new Set(dates)].sort();
+    },
+
+    // Format danh sách suất chiếu
+    formatShowtimesForDisplay(showtimes) {
+    // Lọc showtimes hợp lệ
+    const validShowtimes = showtimes.filter(st => 
+      st.cinema_id == this.selectedCinema &&
+      st.movie_id == this.selectedMovie &&
+      st.show_date == this.selectedDate
+    );
+
+    // Tạo map để loại bỏ trùng giờ
+    const timeMap = new Map();
+    
+    validShowtimes.forEach(st => {
+      // Lấy chỉ giờ:phút (bỏ qua giây) để so sánh
+      const timeKey = st.show_time.substring(0, 5);
+      
+      if (!timeMap.has(timeKey)) {
+        timeMap.set(timeKey, {
+          showtime_id: st.showtime_id,
+          show_time: st.show_time,
+          movie_id: st.movie_id,
+          cinema_id: st.cinema_id,
+          // Giữ nguyên các thông tin khác nếu cần
+          ...st
+        });
+      }
+    });
+
+    // Chuyển map thành mảng và sắp xếp
+    return Array.from(timeMap.values())
+      .sort((a, b) => a.show_time.localeCompare(b.show_time));
   },
 
     // Định dạng ngày tháng

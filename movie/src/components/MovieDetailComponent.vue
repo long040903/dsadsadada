@@ -11,7 +11,7 @@
             <img
               :alt="'Movie poster for ' + movie.title"
               class="rounded-lg w-full"
-              :src="movie.poster"
+              :src="movie.banner_url"
             />
             <div
               class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded"
@@ -234,6 +234,7 @@ export default {
         coupleTickets: 0,
         combos: {},
       },
+      baseUrl: import.meta.env.VITE_API_BASE_URL,
     };
   },
   computed: {
@@ -286,7 +287,9 @@ export default {
   methods: {
     async fetchMovieDetails(movieId) {
       try {
-        const response = await axios.get(`http://localhost:3000/api/movies/${movieId}`);
+        const response = await axios.get(
+          `${this.baseUrl}/api/movies/${movieId}`
+        );
         this.movie = response.data;
       } catch (error) {
         console.error("Error fetching movie details:", error);
@@ -294,8 +297,11 @@ export default {
     },
     async fetchShowtimes(movieId) {
       try {
-        const response = await axios.get(`http://localhost:3000/api/showtimes/${movieId}`);
-        this.showtimes = response.data;
+        const response = await axios.get(
+          `${this.baseUrl}/api/showtimes/movie/${movieId}`
+        );
+        
+        this.showtimes = response.data.showtimes;
       } catch (error) {
         console.error("Error fetching showtimes:", error);
       }

@@ -37,15 +37,15 @@
                         </thead>
                         <tbody>
                             <tr v-for="(user, index) in filteredUsers" :key="user.id">
-                                <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.fullname }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.username }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.email }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.phone }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.cccd }}</td>
-                                <td class="py-2 px-4 border-b">{{ formatDate(user.ngay_sinh) }}</td>
-                                <td class="py-2 px-4 border-b">{{ user.role }}</td>
-                                <td class="py-2 px-4 border-b">
+                                <td class="py-2 px-4 border-b text-center">{{ index + 1 }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.fullname }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.username }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.email }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.phone }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.cccd }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ formatDate(user.ngay_sinh) }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ user.role }}</td>
+                                <td class="py-2 px-4 border-b text-center">
                                     <button class="text-blue-500" @click="openModal('edit', user)">
                                         <i class="fas fa-edit"></i>
                                     </button>

@@ -57,17 +57,17 @@
                                         <i class="fas fa-play-circle"></i>
                                     </a> <!-- Trailer -->
                                 </td>
-                                <td class="py-2 px-4 border-b">{{ movies.director }}</td>
-                                <td class="py-2 px-4 border-b">{{ movies.cast }}</td>
-                                <td class="py-2 px-4 border-b">{{ movies.description }}</td>
-                                <td class="py-2 px-4 border-b">{{ movies.release_year }}</td>
-                                <td class="py-2 px-4 border-b">{{ movies.release_date }}</td>
-                                <td class="py-2 px-4 border-b">
+                                <td class="py-2 px-4 border-b text-center">{{ movies.director }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ movies.cast }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ movies.description }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ movies.release_year }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ movies.release_date }}</td>
+                                <td class="py-2 px-4 border-b text-center">
                                     {{ movies.duration }}
 
                                     <!-- <i class="fas fa-check-circle text-green-500"></i>  -->
                                 </td>
-                                <td class="py-2 px-4 border-b">
+                                <td class="py-2 px-4 border-b text-center">
                                     <button class="text-blue-500" @click="openModal('edit', movies)">
                                         <i class="fas fa-edit"></i>
                                     </button>

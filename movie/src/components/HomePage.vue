@@ -20,22 +20,89 @@
         <i class="fas fa-chevron-right"> </i>
       </button>
     </div>
-    <div class="mt-4 flex justify-center">
-      <button class="bg-white text-black px-4 py-2 rounded">ĐẶT VÉ NGAY</button>
-    </div>
-    <div class="mt-4 flex justify-center space-x-4">
-      <button class="bg-white text-black px-4 py-2 rounded">1. Chọn Rạp</button>
-      <button class="bg-white text-black px-4 py-2 rounded">
-        2. Chọn Phim
-      </button>
-      <button class="bg-white text-black px-4 py-2 rounded">
-        3. Chọn Ngày
-      </button>
-      <button class="bg-white text-black px-4 py-2 rounded">
-        4. Chọn Suất
-      </button>
-      <button class="bg-purple-600 px-4 py-2 rounded">ĐẶT NGAY</button>
-    </div>
+   
+      
+     
+   
+    <div class="mt-4 flex justify-center items-center space-x-4 bg-white py-4 font-bold">
+    <span class="bg-white text-black px-4 py-2 rounded text-2xl">ĐẶT VÉ NHANH</span>
+    
+    <!-- Chọn rạp -->
+    <select 
+      v-model="selectedCinema" 
+      @change="onCinemaChange"
+      class="bg-white text-black px-2 py-1 text-sm rounded-md border border-gray-300"
+    >
+      <option value="">Chọn Rạp</option>
+      <option 
+        v-for="cinema in cinemas" 
+        :value="cinema.cinema_id" 
+        :key="cinema.cinema_id"
+      >
+        {{ cinema.name }}
+      </option>
+    </select>
+
+    <!-- Chọn phim -->
+    <select 
+      v-model="selectedMovie" 
+      @change="onMovieChange"
+      :disabled="!selectedCinema"
+      class="bg-white text-black px-2 py-1 text-sm rounded-md border border-gray-300"
+    >
+      <option value="">Chọn Phim</option>
+      <option 
+        v-for="movie in filteredMovies" 
+        :value="movie.movie_id" 
+        :key="movie.movie_id"
+      >
+        {{ movie.title }} ({{ movie.duration }} phút)
+      </option>
+    </select>
+
+    <!-- Chọn ngày -->
+    <select 
+      v-model="selectedDate" 
+      @change="onDateChange"
+      :disabled="!selectedMovie"
+      class="bg-white text-black px-2 py-1 text-sm rounded-md border border-gray-300"
+    >
+      <option value="">Chọn Ngày</option>
+      <option 
+        v-for="date in availableDates" 
+        :value="date" 
+        :key="date"
+      >
+        {{ formatDate(date) }}
+      </option>
+    </select>
+
+    <!-- Chọn suất -->
+    <select 
+      v-model="selectedTime" 
+      :disabled="!selectedDate"
+      class="bg-white text-black px-2 py-1 text-sm rounded-md border border-gray-300"
+    >
+      <option value="">Chọn Suất</option>
+      <option 
+        v-for="time in availableTimes" 
+        :value="time.showtime_id" 
+        :key="time.showtime_id"
+      >
+      {{ formatTime(time.show_time) }}
+      </option>
+    </select>
+
+    <button 
+      @click="bookTicketQuick"
+      :disabled="!selectedTime"
+      class="bg-purple-600 text-white text-sm px-3 py-1 rounded w-fit h-fit"
+    >
+      ĐẶT NGAY
+    </button>
+  </div>
+   
+    
   </main>
   <div class="bg-gradient-to-r from-blue-900 to-purple-900 text-white">
     <h2 class="mt-8 text-center text-2xl font-bold">PHIM ĐANG CHIẾU</h2>
@@ -98,7 +165,7 @@
         <span class="w-3 h-3 bg-gray-400 rounded-full"></span>
       </div>
       <div class="flex justify-center mt-4">
-        <button class="bg-yellow-500 text-black px-6 py-2 rounded">
+        <button class="bg-yellow-500 text-black px-6 py-2 rounded" @click="goToMovieList">
           XEM THÊM
         </button>
       </div>
@@ -147,7 +214,7 @@
             <button
               @click="goToDetails(movie.movieId)"
               class="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
-            >
+              @click="bookTicket(movie.movieId)"   >
               Tìm Hiểu Thêm
             </button>
           </div>
@@ -155,7 +222,7 @@
       </div>
     </div>
     <div class="flex justify-center mt-8">
-      <button class="bg-yellow-500 text-black font-bold py-2 px-8 rounded-full">
+      <button class="bg-yellow-500 text-black font-bold py-2 px-8 rounded-full" @click="goToMovieList">
         XEM THÊM
       </button>
     </div>
@@ -431,26 +498,165 @@
 </template>
 <script>
 import axios from "axios";
+import { toast } from 'vue3-toastify';
 import HeaderComponents from "./HeaderComponent.vue";
 import FooterComponents from "./FooterComponents.vue";
 
 export default {
-  name: "HomePage",
+  name: "ShowtimesComponent",
   components: {
     HeaderComponents,
     FooterComponents,
   },
   data() {
     return {
+      cinemas: [],
       movies: [],
+      selectedCinema: null,
+      filteredMovies: [],
+      selectedMovie: null,
+      availableDates: [],
+      selectedDate: null,
+      availableTimes: [],
+      selectedTime: null
     };
   },
-  mounted() {
-    this.getAllMovies();
-    // Optionally, you can use the showTab function here if needed.
-    // showTab('login'); // Example: Defaulting to the 'login' tab on mount
+  async mounted() {
+    await this.fetchCinemas();
+    await this.getAllMovies() ;
   },
   methods: {
+    // Lấy danh sách tất cả rạp chiếu
+    async fetchCinemas() {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cinemas`);
+        this.cinemas = response.data;
+      } catch (error) {
+        console.error("Error fetching cinemas:", error);
+        toast.error("Không thể tải danh sách rạp chiếu");
+      }
+    },
+
+    // Xử lý khi chọn rạp
+    async onCinemaChange() {
+      this.resetSelection();
+      
+      if (!this.selectedCinema) return;
+      
+      try {
+        // Gọi API lấy showtimes theo cinema_id
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/showtimes`, {
+          params: {
+            cinema_id: this.selectedCinema
+          }
+        });
+
+        // Kiểm tra cấu trúc dữ liệu trả về
+        const showtimes = this.normalizeShowtimesData(response.data);
+        
+        // Lọc danh sách phim duy nhất đang chiếu tại rạp này
+        this.filteredMovies = this.getUniqueMoviesFromShowtimes(showtimes);
+        
+        console.log('Movies at selected cinema:', this.filteredMovies);
+      } catch (error) {
+        console.error("Error fetching cinema movies:", error);
+        toast.error("Không thể tải danh sách phim theo rạp");
+      }
+    },
+
+    // Xử lý khi chọn phim
+    async onMovieChange() {
+  this.resetTimeSelection(); // Reset các lựa chọn về thời gian
+  
+  if (!this.selectedCinema || !this.selectedMovie) {
+    this.availableDates = [];
+    return;
+  }
+
+  try {
+    // Gọi API lấy showtimes theo cinema_id và movie_id
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/showtimes`, {
+      params: {
+        cinema_id: this.selectedCinema,
+        movie_id: this.selectedMovie
+      }
+    });
+
+    // Chuẩn hóa dữ liệu trả về
+    const showtimes = this.normalizeShowtimesData(response.data);
+    
+    // Lọc và sắp xếp các ngày chiếu
+    this.availableDates = this.processAvailableDates(showtimes);
+    
+    console.log('Available dates:', this.availableDates);
+  } catch (error) {
+    console.error("Error fetching available dates:", error);
+    toast.error("Không thể tải danh sách ngày chiếu");
+    this.availableDates = [];
+  }
+},
+
+// Helper method để xử lý danh sách ngày chiếu
+processAvailableDates(showtimes) {
+  // Lọc showtimes hợp lệ
+  const validShowtimes = showtimes.filter(st => 
+    st.cinema_id == this.selectedCinema && 
+    st.movie_id == this.selectedMovie &&
+    st.show_date
+  );
+
+  // Trích xuất các ngày duy nhất
+  const uniqueDates = [...new Set(validShowtimes.map(st => st.show_date))];
+  
+  // Sắp xếp ngày từ sớm nhất đến muộn nhất
+  return uniqueDates.sort((a, b) => new Date(a) - new Date(b));
+},
+normalizeShowtimesData(data) {
+  // Xử lý nhiều định dạng response khác nhau
+  if (Array.isArray(data)) {
+    return data; // Nếu data đã là mảng
+  }
+  
+  if (data && typeof data === 'object') {
+    // Thử các key thông dụng
+    return data.data || data.showtimes || data.results || [];
+  }
+  
+  return []; // Mặc định trả về mảng rỗng
+},
+resetTimeSelection() {
+  this.selectedDate = null;
+  this.selectedTime = null;
+  this.availableDates = [];
+  this.availableTimes = [];
+},
+
+    // Xử lý khi chọn ngày
+    async onDateChange() {
+      this.selectedTime = null;
+      this.availableTimes = [];
+      
+      if (!this.selectedCinema || !this.selectedMovie || !this.selectedDate) return;
+      
+      try {
+        // Gọi API lấy showtimes theo cinema_id, movie_id và ngày
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/showtimes`, {
+          params: {
+            cinema_id: this.selectedCinema,
+            movie_id: this.selectedMovie,
+            show_date: this.selectedDate
+          }
+        });
+
+        const showtimes = this.normalizeShowtimesData(response.data);
+        this.availableTimes = this.formatShowtimesForDisplay(showtimes);
+        
+      } catch (error) {
+        console.error("Error fetching showtimes:", error);
+        toast.error("Không thể tải danh sách suất chiếu");
+      }
+    },
+
     async getAllMovies() {
       try {
         const apiUrl = import.meta.env.VITE_API_BASE_URL + "/api/movies";
@@ -498,5 +704,57 @@ export default {
       window.open(url, "_blank");
     },
   },
+
+    // Định dạng ngày tháng
+    formatDate(dateString) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('vi-VN', options);
+    },
+    formatTime(timeString) {
+  return timeString.substring(0, 5); // Chỉ hiển thị giờ:phút
+},
+
+    // Xử lý đặt vé
+    bookTicketQuick() {
+      if (!this.selectedTime) {
+        toast.error("Vui lòng chọn đầy đủ thông tin");
+        return;
+      }
+      
+      const selectedShowtime = this.availableTimes.find(time => time.showtime_id === this.selectedTime);
+      
+      if (selectedShowtime?.movie_id) {
+        this.$router.push({ 
+          name: 'MovieDetailView', 
+          params: { id: selectedShowtime.movie_id },
+          query: { 
+            showtime_id: this.selectedTime,
+            cinema_id: this.selectedCinema,
+            show_date: this.selectedDate
+          }
+        });
+      } else {
+        toast.error("Không tìm thấy thông tin phim");
+      }
+    },
+    viewTrailer(movie) {
+      if (movie.trailerUrl) {
+        // Mở trailer, có thể mở trong một cửa sổ mới hoặc dùng iframe
+        window.open(movie.trailerUrl, '_blank');
+      } else {
+        toast.error('Không có trailer cho phim này!');
+      }
+    },
+    bookTicket(movieId) {
+    if (!movieId) {
+      console.error('Không có movieId');
+      return;
+    }
+    this.$router.push({ name: 'MovieDetailView', params: { id: movieId } });
+  },
+  goToMovieList() {
+    this.$router.push('/movie');
+  }
+  }
 };
 </script>

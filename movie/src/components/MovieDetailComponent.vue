@@ -1,8 +1,5 @@
 <template>
   <HeaderComponents />
-  <div class="main-dc-1"></div>
-  <div class="main-dc-2"></div>
-  <div class="main-dc-3"></div>
   <div class="p-4">
     <div class="mx-40 p-4 rounded-lg" v-if="movie">
       <div class="grid grid-cols-12 gap-4">
@@ -140,12 +137,7 @@
               >
                 {{ time }}
               </div>
-            </div>
           </div>
-        </div>
-        <div v-else class="text-center py-8">
-          <p>Không có lịch chiếu nào cho ngày đã chọn</p>
-        </div>
       </div>
     </div>
 
@@ -185,7 +177,6 @@
           ĐẶT VÉ
         </button>
       </div>
-    </div>
   </div>
 
   <div class="bg-gradient-1">
@@ -193,6 +184,7 @@
       <FooterComponents />
     </div>
   </div>
+  <FooterComponents />
 </template>
 
 <script>
@@ -201,10 +193,10 @@ import FooterComponents from "./FooterComponents.vue";
 import axios from "axios";
 
 export default {
-  name: "MovieDetailComponent",
+  name: 'MovieDetailComponent',
   components: {
-    HeaderComponents,
-    FooterComponents,
+      HeaderComponents, 
+      FooterComponents
   },
   props: {
     movieId: {
@@ -390,6 +382,37 @@ export default {
 };
 </script>
 
+      try {
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/movies/${movieId}`;  // Lấy đúng API với ID phim
+        const response = await axios.get(apiUrl);
+
+        console.log('Dữ liệu chi tiết phim:', response.data); // Kiểm tra dữ liệu nhận được
+        
+        // Kiểm tra dữ liệu và gán vào movieDetails
+        if (response.data) {
+          this.movieDetails = response.data;  // Gán toàn bộ dữ liệu vào movieDetails
+          console.log('Dữ liệu gán vào movieDetails:', this.movieDetails); // Kiểm tra lại giá trị movieDetails
+        } else {
+          this.error = 'Không tìm thấy dữ liệu phim';
+        }
+      } catch (error) {
+        console.error('Lỗi khi tải chi tiết phim:', error);
+        this.error = 'Lỗi khi tải dữ liệu phim';
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    viewTrailer(movie) {
+      if (movie.trailer_url) {
+        // Mở trailer, có thể mở trong một cửa sổ mới hoặc dùng iframe
+        window.open(movie.trailer_url, '_blank');
+      } else {
+        toast.error('Không có trailer cho phim này!');
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 @import "../assets/css/movie-detail.css";

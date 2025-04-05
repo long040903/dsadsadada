@@ -89,7 +89,7 @@
         :value="time.showtime_id" 
         :key="time.showtime_id"
       >
-        {{ time.show_time }}
+      {{ formatTime(time.show_time) }}
       </option>
     </select>
 
@@ -745,25 +745,45 @@ resetTimeSelection() {
 
     // Format danh sách suất chiếu
     formatShowtimesForDisplay(showtimes) {
-      return showtimes
-        .filter(st => 
-          st.cinema_id == this.selectedCinema &&
-          st.movie_id == this.selectedMovie &&
-          st.show_date == this.selectedDate
-        )
-        .map(st => ({
+    // Lọc showtimes hợp lệ
+    const validShowtimes = showtimes.filter(st => 
+      st.cinema_id == this.selectedCinema &&
+      st.movie_id == this.selectedMovie &&
+      st.show_date == this.selectedDate
+    );
+
+    // Tạo map để loại bỏ trùng giờ
+    const timeMap = new Map();
+    
+    validShowtimes.forEach(st => {
+      // Lấy chỉ giờ:phút (bỏ qua giây) để so sánh
+      const timeKey = st.show_time.substring(0, 5);
+      
+      if (!timeMap.has(timeKey)) {
+        timeMap.set(timeKey, {
           showtime_id: st.showtime_id,
           show_time: st.show_time,
-          movie_id: st.movie_id
-        }))
-        .sort((a, b) => a.show_time.localeCompare(b.show_time));
-    },
+          movie_id: st.movie_id,
+          cinema_id: st.cinema_id,
+          // Giữ nguyên các thông tin khác nếu cần
+          ...st
+        });
+      }
+    });
+
+    // Chuyển map thành mảng và sắp xếp
+    return Array.from(timeMap.values())
+      .sort((a, b) => a.show_time.localeCompare(b.show_time));
+  },
 
     // Định dạng ngày tháng
     formatDate(dateString) {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString('vi-VN', options);
     },
+    formatTime(timeString) {
+  return timeString.substring(0, 5); // Chỉ hiển thị giờ:phút
+},
 
     // Xử lý đặt vé
     bookTicketQuick() {

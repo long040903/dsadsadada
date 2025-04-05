@@ -25,11 +25,12 @@
                         <thead>
                             <tr>
                                 <th class="py-2 px-4 border-b">STT</th>
-                                <th class="py-2 px-4 border-b">Mã rạp</th>
-                                <th class="py-2 px-4 border-b">Tên rạp</th>
-                                <th class="py-2 px-4 border-b">Địa chỉ</th>
-                                <th class="py-2 px-4 border-b">Số điện thoại </th>
-                                <th class="py-2 px-4 border-b">Sức chứa</th> <!-- Cột mới cho Trailer -->
+                                <th class="py-2 px-4 border-b">Tên phim</th>
+                                <th class="py-2 px-4 border-b">Thể loại	</th>
+                                <th class="py-2 px-4 border-b">Rạp chiếu	</th>
+                                <th class="py-2 px-4 border-b">Ngày chiếu </th>
+                                <th class="py-2 px-4 border-b">Giờ chiếu</th>
+                                <th class="py-2 px-4 border-b">Thời lượng</th> <!-- Cột mới cho Trailer -->
                                 <th class="py-2 px-4 border-b">Hành động</th>
                             </tr>
                         </thead>
@@ -40,6 +41,7 @@
                                 <td class="py-2 px-4 border-b text-center">{{ cinemas.name }}</td> <!-- Tên phim -->
                                 <td class="py-2 px-4 border-b text-center">{{ cinemas.address }}</td>
                                 <td class="py-2 px-4 border-b text-center">{{ cinemas.phone }}</td>
+                                <td class="py-2 px-4 border-b text-center">{{ cinemas.capacity }}</td>
                                 <td class="py-2 px-4 border-b text-center">{{ cinemas.capacity }}</td>
                                 <td class="py-2 px-4 border-b text-center">
                                     <button class="text-blue-500" @click="openModal('edit', cinemas)">
@@ -75,22 +77,23 @@
 
                         <h2 class="text-xl font-bold mb-4">{{ modalType === 'add' ? 'Thêm mới' : 'Chỉnh sửa' }}</h2>
                         <form @submit.prevent="handleSubmit">
-                            <label class="block mb-2">Mã rạp:</label>
+                            <label class="block mb-2">Tên phim:</label>
                             <input type="text" v-model="form.cinemaId" class="border px-4 py-2 w-full mb-4" disabled>
 
-                            <label class="block mb-2">Tên rạp:</label>
+                            <label class="block mb-2">Thể loại	:</label>
                             <input type="text" v-model="form.name" class="border px-4 py-2 w-full mb-4">
 
-                            <label class="block mb-2">Địa chỉ :</label>
+                            <label class="block mb-2">Rạp chiếu	 :</label>
                             <input type="text" v-model="form.address" class="border px-4 py-2 w-full mb-4">
 
-                            <label class="block mb-2">SĐT:</label>
+                            <label class="block mb-2">Ngày chiếu:</label>
                             <input type="text" v-model="form.phone" class="border px-4 py-2 w-full mb-4">
 
-                            <label class="block mb-2">Sức chứa:</label>
+                            <label class="block mb-2">Giờ chiếu:</label>
                             <input type="number" v-model="form.capacity" class="border px-4 py-2 w-full mb-4">
 
-
+                            <label class="block mb-2">Thời lượng:</label>
+                            <input type="number" v-model="form.capacity" class="border px-4 py-2 w-full mb-4">
 
                             <div class="flex justify-end">
                                 <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2"
@@ -133,7 +136,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
 export default {
-    name: 'CinemasPage',
+    name: 'ShowtimePage',
     components: {
         NavbarComponent,
         HeaderComponent
@@ -180,7 +183,7 @@ export default {
             } else if (type === 'delete' && cinemas) {  // Sửa từ 'cinema' thành 'cinemas'
         this.form = {
             cinemaId: cinemas.cinema_id,
-            name: cinemas.name  // Thêm dòng này để hiển thị tên rạp
+            name: cinemas.name  // Thêm dòng này để hiển thị Thể loại	
         };
     }
         },

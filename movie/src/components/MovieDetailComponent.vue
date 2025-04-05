@@ -1,85 +1,87 @@
 <template>
   <HeaderComponents />
   <div class="p-4">
-    <div v-if="isLoading" class="text-center">Đang tải dữ liệu...</div>
-    <div v-if="error" class="text-center text-red-500">{{ error }}</div>
-      <div v-if="movieDetails" class="max-w-5xl mx-auto bg-[#1c2541] p-4 rounded-lg">
-          <div class="flex flex-col md:flex-row">
-              <div class="md:w-1/2">
-                  <div class="relative">
-                      <img alt="Movie poster showing a group of people with various expressions" class="rounded-lg"
-                          height="600"
-                          src="https://storage.googleapis.com/a1aa/image/Q39JTVZk03bRSdbWqcBMO4UPf2PrO0HMksfg9CYrwW4.jpg"
-                          width="400" />
-                      <div class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded">
-                          T18
-                      </div>
-                  </div>
-              </div>
-              <div class="md:w-1/2 md:pl-8 mt-4 md:mt-0">
-                  <h1 class="text-3xl font-bold">
-                    {{ movieDetails.title }}
-                  </h1>
-                  <div class="mt-2">
-                      <div class="flex items-center text-sm">
-                          <i class="fas fa-film mr-2">
-                          </i>
-                          {{ movieDetails.genre }}
-                      </div>
-                      <div class="flex items-center text-sm mt-1">
-                          <i class="fas fa-clock mr-2">
-                          </i>
-                          {{ movieDetails.duration }}'
-                      </div>
-                      <div class="flex items-center text-sm mt-1 bg-yellow-500 text-black px-2 py-1 rounded">
-                          <i class="fas fa-exclamation-triangle mr-2">
-                          </i>
-                          T18: Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)
-                      </div>
-                  </div>
-                  <div class="mt-4">
-                      <h2 class="text-xl font-bold">
-                          MÔ TẢ
-                      </h2>
-                      <p class="mt-2">
-                          Đạo diễn: {{ movieDetails.director }}
-                      </p>
-                      <p>
-                          Diễn viên: {{ movieDetails.cast }}
-                      </p>
-                      <p>
-                          Khởi chiếu: {{ movieDetails.release_date }}
-                      </p>
-                  </div>
-                  <div class="mt-4">
-                      <h2 class="text-xl font-bold">
-                          NỘI DUNG PHIM
-                      </h2>
-                      <p class="mt-2">
-                        {{ movieDetails.description }}
-                      </p>
-                  </div>
-                  <div class="mt-4">
-                      <a class="flex items-center text-red-500" href="#" @click="viewTrailer(movieDetails)">
-                          <i class="fas fa-play-circle text-2xl mr-2">
-                          </i>
-                          Xem Trailer
-                      </a>
-                  </div>
-              </div>
+    <div class="mx-40 p-4 rounded-lg" v-if="movie">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-5">
+          <div class="relative">
+            <img
+              :alt="'Movie poster for ' + movie.title"
+              class="rounded-lg w-full"
+              :src="movie.poster"
+            />
+            <div
+              class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded"
+            >
+              {{ movie.rating }}
+            </div>
           </div>
+        </div>
+        <div class="col-span-7 mt-4 md:mt-0 space-y-8">
+          <h1 class="text-3xl font-bold uppercase">
+            {{ movie.title }} ({{ movie.rating }})
+          </h1>
+          <div class="mt-2 space-y-4">
+            <div class="flex items-center text-lg">
+              <i class="fas fa-film mr-2"></i>
+              {{ movie.genre }}
+            </div>
+            <div class="flex items-center text-lg">
+              <i class="fas fa-clock mr-2"></i>
+              {{ movie.duration }}'
+            </div>
+            <div class="flex items-center text-lg">
+              <i class="fas fa-globe mr-2"></i>
+              {{ movie.country }}
+            </div>
+            <div class="flex items-center text-lg">
+              <i class="fas fa-flag mr-2"></i>
+              {{ movie.language }}
+            </div>
+            <div
+              class="flex items-center text-sm mt-1 bg-yellow-500 text-black px-2 py-1 rounded w-fit"
+            >
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              {{ movie.rating_description }}
+            </div>
+          </div>
+          <div class="mt-4">
+            <h2 class="text-xl font-bold">MÔ TẢ</h2>
+            <p class="mt-2">Đạo diễn: {{ movie.director }}</p>
+            <p>Diễn viên: {{ movie.actors }}</p>
+            <p>Khởi chiếu: {{ movie.release_date }}</p>
+          </div>
+          <div class="mt-4">
+            <h2 class="text-xl font-bold">NỘI DUNG PHIM</h2>
+            <p class="mt-2">{{ movie.description }}</p>
+            <a
+              class="mt-2 text-sm hover:text-yellow-400 inline-block underline"
+              href="#"
+            >
+              Xem thêm
+            </a>
+          </div>
+          <div class="mt-4">
+            <a
+              class="flex items-cente"
+              :href="movie.trailer_url"
+              target="_blank"
+            >
+              <i class="fas fa-play-circle text-3xl mr-2 text-red-500"></i>
+              <span class="text-xl underline">Xem Trailer</span>
+            </a>
+          </div>
+        </div>
       </div>
-  </div>
-  <div class="min-h-screen flex flex-col items-center justify-center">
+    </div>
+
+    <!-- Lịch chiếu -->
+    <div
+      class="min-h-screen flex flex-col items-center justify-center"
+      v-if="showtimes"
+    >
       <div
           class="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-purple-900 text-white">
-          
-          
-          
-          
-          
-          
-
 
           <div class="min-h-screen flex flex-col items-center justify-center">
     <div class="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-purple-900 text-white">
@@ -144,6 +146,44 @@
 
 
           
+      </div>
+    </div>
+
+    <!-- Đặt vé -->
+    <div
+      class="booking-movie flex flex-col items-center p-8"
+      :class="{ active: showBookingSection }"
+      id="booking-section"
+    >
+      <!-- Phần chọn ghế và combo -->
+      <!-- ... (giữ nguyên phần này nhưng thêm v-model và methods tương ứng) ... -->
+
+      <div class="mt-8 text-center">
+        <div class="font-bold">{{ movie?.title }}</div>
+        <div>{{ selectedCinema?.name }}</div>
+      </div>
+
+      <div
+        id="booking-bar"
+        class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 flex justify-between items-center"
+      >
+        <div class="text-center">
+          <div>Thời gian giữ vé</div>
+          <div class="bg-yellow-500 text-black font-bold px-2 py-1">
+            {{ countdown }}
+          </div>
+        </div>
+        <div class="text-center">
+          <div>Tạm tính</div>
+          <div class="font-bold">{{ formatPrice(totalAmount) }} VND</div>
+        </div>
+        <button
+          class="bg-yellow-500 text-black font-bold px-4 py-2"
+          @click="bookTickets"
+          :disabled="!canBook"
+        >
+          ĐẶT VÉ
+        </button>
       </div>
   </div>
   <div v-show="showTicketSelection && selectedShowtime"
@@ -819,6 +859,7 @@
           </div>
       </div>
   </div>
+  </div>
   <FooterComponents />
 </template>
 
@@ -834,6 +875,12 @@ export default {
   components: {
     HeaderComponents,
     FooterComponents,
+  },
+  props: {
+    movieId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {

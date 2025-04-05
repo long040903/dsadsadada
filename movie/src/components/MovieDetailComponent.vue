@@ -73,87 +73,81 @@
   <div class="min-h-screen flex flex-col items-center justify-center">
       <div
           class="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-purple-900 text-white">
-          <div class="text-center">
-              <h1 class="text-4xl font-bold mb-8">LỊCH CHIẾU</h1>
-              <div class="flex justify-center space-x-4 mb-8">
-                  <div class="bg-yellow-400 text-black px-4 py-2 rounded">02/03<br>Chủ Nhật</div>
-                  <div class="border border-yellow-400 px-4 py-2 rounded">03/03<br>Thứ Hai</div>
-                  <div class="border border-yellow-400 px-4 py-2 rounded">04/03<br>Thứ Ba</div>
-                  <div class="border border-yellow-400 px-4 py-2 rounded">05/03<br>Thứ Tư</div>
-              </div>
-              <button class="border border-yellow-400 px-4 py-2 rounded mb-8">HỒ CHÍ MINH</button>
+          
+          
+          
+          
+          
+          
+
+
+          <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-purple-900 text-white">
+      <!-- Phần ngày chiếu -->
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-8">LỊCH CHIẾU</h1>
+        <div class="flex justify-center space-x-4 mb-8 overflow-x-auto py-2">
+          <button
+            v-for="date in availableDates"
+            :key="date"
+            @click="selectDate(date)"
+            class="min-w-[80px] px-4 py-2 rounded transition-colors"
+            :class="{
+              'bg-yellow-400 text-black': selectedDate === date,
+              'border border-yellow-400 hover:bg-yellow-50': selectedDate !== date
+            }"
+          >
+            <div>{{ formatDayMonth(date) }}</div>
+            <div>{{ formatDayOfWeek(date) }}</div>
+          </button>
+        </div>
+        
+      </div>
+
+      <!-- Danh sách rạp -->
+      <div class="w-full max-w-4xl mb-12">
+        <h2 class="text-2xl font-bold mb-4">DANH SÁCH RẠP</h2>
+        
+        <div 
+          v-for="cinema in allCinemas" 
+          :key="cinema.cinema_id" 
+          class="bg-purple-700 p-4 mb-4 rounded"
+        >
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-bold text-yellow-400">{{ cinema.name }}</h3>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <div class="w-full max-w-4xl">
-              <h2 class="text-2xl font-bold mb-4">DANH SÁCH RẠP</h2>
-              <div class="bg-purple-700 p-4 mb-4 rounded">
-                  <div class="flex justify-between items-center mb-2">
-                      <h3 class="text-xl font-bold text-yellow-400">Cinestar Quốc Thanh (TP.HCM)</h3>
-                      <i class="fas fa-chevron-down"></i>
-                  </div>
-                  <p class="mb-2">271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Quận 1, Thành Phố Hồ Chí Minh</p>
-                  <p class="mb-2">Standard</p>
-                  <div class="grid grid-cols-6 gap-2">
-                      <div class="border border-white px-2 py-1 rounded toggle-button">09:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">09:45</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">10:40</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">11:40</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">12:10</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">13:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">14:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">14:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">15:20</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">16:20</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">16:50</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">17:40</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">18:40</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">19:10</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">20:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">20:40</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">21:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">21:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">22:20</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">23:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">23:20</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">23:50</div>
-                  </div>
-              </div>
-              <div class="bg-purple-700 p-4 mb-4 rounded">
-                  <div class="flex justify-between items-center mb-2">
-                      <h3 class="text-xl font-bold text-yellow-400">Cinestar Hai Bà Trưng (TP.HCM)</h3>
-                      <i class="fas fa-chevron-down"></i>
-                  </div>
-                  <p class="mb-2">135 Hai Bà Trưng, Phường Bến Nghé, Quận 1, Thành Phố Hồ Chí Minh</p>
-                  <p class="mb-2">Standard</p>
-                  <div class="grid grid-cols-6 gap-2">
-                      <div class="border border-white px-2 py-1 rounded toggle-button">08:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">09:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">10:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">11:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">12:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">12:45</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">13:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">14:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">15:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">15:45</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">16:10</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">16:45</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">17:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">18:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">18:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">19:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">19:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">20:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">20:45</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">21:15</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">22:30</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">23:00</div>
-                      <div class="border border-white px-2 py-1 rounded toggle-button">23:30</div>
-                  </div>
-              </div>
+          <p class="mb-2">{{ cinema.address }}</p>
+          <p class="mb-2">Standard</p>
+          
+          <!-- Hiển thị suất chiếu hoặc thông báo -->
+          <div v-if="hasShowtimesForMovie(cinema.cinema_id)" class="grid grid-cols-6 gap-2">
+            <button
+              v-for="showtime in getShowtimesForCinemaAndMovie(cinema.cinema_id)"
+              :key="showtime.showtime_id"
+              @click="selectShowtime(showtime)"
+              class="border border-white px-2 py-1 rounded toggle-button"
+              :class="{ 'bg-yellow-400 text-black border-yellow-400': selectedShowtime?.showtime_id === showtime.showtime_id }"
+            >
+              {{ formatTime(showtime.show_time) }}
+            </button>
           </div>
+          <div v-else class="text-center py-4 text-gray-300">
+            Không có suất chiếu
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+          
       </div>
   </div>
-  <div class="booking-movie flex flex-col items-center p-8" id="booking-section" style="display: none;">
+  <div v-show="showTicketSelection && selectedShowtime"
+  id="ticket-section"  class="booking-movie flex flex-col items-center p-8"  style="display: none;">
       <h1 class="text-2xl font-bold mb-4">CHỌN LOẠI VÉ</h1>
       <div class="flex justify-center space-x-4 mb-8">
           <div class="bg-gray-800 p-4 rounded-lg text-center">
@@ -829,71 +823,174 @@
 </template>
 
 <script>
-import HeaderComponents from './HeaderComponent.vue';
-import FooterComponents from './FooterComponents.vue';
-import axios from 'axios'; // Đừng quên import axios
-
-import '../assets/js/movie_detail.js';
+import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import HeaderComponents from "./HeaderComponent.vue";
+import FooterComponents from "./FooterComponents.vue";
 
 export default {
-  name: 'MovieDetailComponent',
+  name: "ShowtimesComponent",
   components: {
-      HeaderComponents, 
-      FooterComponents
+    HeaderComponents,
+    FooterComponents,
   },
   data() {
     return {
-      movieDetails: null, // Dữ liệu phim chi tiết
+      movieDetails: null,
+      cinemas: [],
+      showtimes: [],
+      selectedDate: null,
+      selectedShowtime: null,
       isLoading: false,
-      error: null
+      movieId: null,
+      showTicketSelection: false,
     };
   },
-  created() {
-    const movieId = this.$route.params.id;  // Lấy id từ URL
-    console.log('Movie ID:', movieId); // Xem giá trị id trong console
-
-    if (movieId) {
-      this.fetchMovieDetails(movieId);
-    } else {
-      this.error = 'Không có ID phim';
+  computed: {
+    allCinemas() {
+      return this.cinemas;
+    },
+    availableDates() {
+      if (!Array.isArray(this.showtimes)) return [];
+      // Chỉ lấy ngày của phim hiện tại (theo movieId)
+      const dates = [...new Set(this.showtimes
+        .filter(st => st?.show_date && st.movie_id == this.movieId)
+        .map(st => st.show_date)
+      )];
+      return dates.sort((a, b) => new Date(a) - new Date(b));
     }
   },
   methods: {
     async fetchMovieDetails(movieId) {
-      this.isLoading = true;
-      this.error = null;
-
       try {
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/movies/${movieId}`;  // Lấy đúng API với ID phim
-        const response = await axios.get(apiUrl);
-
-        console.log('Dữ liệu chi tiết phim:', response.data); // Kiểm tra dữ liệu nhận được
-        
-        // Kiểm tra dữ liệu và gán vào movieDetails
-        if (response.data) {
-          this.movieDetails = response.data;  // Gán toàn bộ dữ liệu vào movieDetails
-          console.log('Dữ liệu gán vào movieDetails:', this.movieDetails); // Kiểm tra lại giá trị movieDetails
-        } else {
-          this.error = 'Không tìm thấy dữ liệu phim';
-        }
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/movies/${movieId}`);
+        this.movieDetails = response.data;
       } catch (error) {
-        console.error('Lỗi khi tải chi tiết phim:', error);
-        this.error = 'Lỗi khi tải dữ liệu phim';
-      } finally {
-        this.isLoading = false;
+        console.error('Error fetching movie details:', error);
+        toast.error('Lỗi khi tải thông tin phim');
       }
     },
+    
+    // Kiểm tra rạp có suất chiếu cho phim này không
+    hasShowtimesForMovie(cinemaId) {
+      if (!this.selectedDate || !this.movieId) return false;
+      
+      return this.showtimes.some(
+        st => st.cinema_id === cinemaId && 
+              st.show_date === this.selectedDate &&
+              st.movie_id == this.movieId
+      );
+    },
+    
+    // Lấy suất chiếu cho rạp và phim hiện tại
+    getShowtimesForCinemaAndMovie(cinemaId) {
+      if (!this.selectedDate || !this.movieId) return [];
+      
+      const filtered = this.showtimes.filter(
+        st => st.cinema_id === cinemaId && 
+              st.show_date === this.selectedDate &&
+              st.movie_id == this.movieId
+      );
+      
+      // Loại bỏ trùng lặp thời gian
+      const unique = [];
+      const seen = new Set();
+      
+      for (const st of filtered) {
+        if (!seen.has(st.show_time)) {
+          seen.add(st.show_time);
+          unique.push(st);
+        }
+      }
+      
+      return unique;
+    },
+    
+    async fetchCinemas() {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cinemas`);
+        this.cinemas = response.data || [];
+      } catch (error) {
+        console.error('Error fetching cinemas:', error);
+        toast.error('Lỗi khi tải danh sách rạp');
+      }
+    },
+    
+    async fetchShowtimes() {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/showtimes`);
+        
+        this.showtimes = Array.isArray(response.data) ? response.data : 
+                       response.data?.showtimes ? response.data.showtimes : 
+                       response.data?.data ? response.data.data : [];
+        
+        if (this.availableDates.length > 0) {
+          this.selectedDate = this.availableDates[0];
+        }
+      } catch (error) {
+        console.error('Error fetching showtimes:', error);
+        toast.error('Lỗi khi tải lịch chiếu');
+      }
+    },
+    
+    formatDayMonth(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      return `${day}/${month}`;
+    },
+    
+    formatDayOfWeek(dateString) {
+      const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+      const date = new Date(dateString);
+      return days[date.getDay()];
+    },
+    
+    formatTime(timeString) {
+      return timeString.substring(0, 5);
+    },
+    
+    selectDate(date) {
+      this.selectedDate = date;
+      this.selectedShowtime = null;
+    },
+    
+    selectShowtime(showtime) {
+    this.selectedShowtime = showtime;
+    this.showTicketSelection = true;
+    
+    // Tự động cuộn xuống phần chọn vé
+    this.$nextTick(() => {
+      const element = document.getElementById('ticket-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  },
+    
     viewTrailer(movie) {
       if (movie.trailer_url) {
-        // Mở trailer, có thể mở trong một cửa sổ mới hoặc dùng iframe
         window.open(movie.trailer_url, '_blank');
       } else {
         toast.error('Không có trailer cho phim này!');
       }
     }
+  },
+  async created() {
+    this.movieId = this.$route.params.id;
+    if (this.movieId) {
+      await this.fetchMovieDetails(this.movieId);
+      await this.fetchCinemas();
+      await this.fetchShowtimes();
+    }
   }
-}
+};
 </script>
+
+
+
+
 
 <style scoped>
 @import "../assets/css/movie-detail.css";

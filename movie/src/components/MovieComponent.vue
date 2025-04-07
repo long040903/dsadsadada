@@ -10,7 +10,7 @@
     <div v-for="movie in getMovies" :key="movie.id" class="text-center">
       <div class="relative">
         <img :alt="'Movie poster for ' + movie.title" height="450" 
-             :src="movie.poster" width="300" />
+             :src="movie.banner_url" width="300" />
         
       </div>
       <p class="mt-4">{{ movie.title }} </p>
@@ -34,7 +34,7 @@
       <div v-for="movie in getMovies" :key="movie.id" class="text-center">
         <div class="relative">
           <img :alt="'Movie poster for ' + movie.title" height="450" 
-               :src="movie.poster" width="300" />
+               :src="movie.banner_url" width="300" />
          
         </div>
         <p class="mt-4">{{ movie.title }}</p>

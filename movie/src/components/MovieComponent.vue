@@ -10,7 +10,7 @@
     <div v-for="movie in getMovies" :key="movie.id" class="text-center">
       <div class="relative">
         <img :alt="'Movie poster for ' + movie.title" height="450" 
-             :src="movie.poster" width="300" />
+             :src="movie.banner_url" width="300" />
         
       </div>
       <p class="mt-4">{{ movie.title }} </p>
@@ -34,16 +34,16 @@
       <div v-for="movie in getMovies" :key="movie.id" class="text-center">
         <div class="relative">
           <img :alt="'Movie poster for ' + movie.title" height="450" 
-               :src="movie.poster" width="300" />
+               :src="movie.banner_url" width="300" />
          
         </div>
         <p class="mt-4">{{ movie.title }}</p>
         <div class="flex justify-center space-x-4 mt-4">
-          <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
+          <button class="bg-transparent text-white py-2 px-4 rounded border border-white" @click="viewTrailer(movie)">
             <i class="fas fa-play-circle mr-2"></i>
             Xem Trailer
           </button>
-          <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+          <button class="bg-yellow-500 text-black py-2 px-4 rounded" @click="bookTicket(movie.movie_id)">
             ĐẶT VÉ
           </button>
         </div>

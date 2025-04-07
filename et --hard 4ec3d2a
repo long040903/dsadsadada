@@ -1,0 +1,69 @@
+[33m0b0dd0c[m[33m ([m[1;36mHEAD -> [m[1;32mlong[m[33m, [m[1;31morigin/long[m[33m)[m Merge branch 'main' of https://github.com/Haidoan29/movie-fontend into long
+[33m4ec3d2a[m new code
+[33m34564ef[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #27 from Haidoan29/haidt
+[33mbc4ae0b[m fix conflic
+[33m40954dd[m code mới
+[33mc629b26[m đặt phim
+[33m503474b[m code mới
+[33me5c5c78[m Merge pull request #25 from Haidoan29/haidt
+[33m01ddeaa[m Resolved merge conflicts
+[33mee2272c[m Merge pull request #24 from Haidoan29/haidt
+[33m07a9854[m  ud
+[33m1892bed[m Merge pull request #23 from Haidoan29/long
+[33m8e98480[m Merge pull request #22 from Haidoan29/tamMt
+[33m4457316[m Merge branch 'main' of https://github.com/Haidoan29/movie-fontend into long
+[33m20ce4b4[m code ms
+[33meb784a5[m Update source code.
+[33m983da4c[m Merge pull request #21 from Haidoan29/haidt
+[33m656518e[m  ud
+[33mcef23c0[m Merge pull request #20 from Haidoan29/long
+[33md814315[m Merge pull request #19 from Haidoan29/tamMt
+[33m87c1232[m Thêm code mới vào nhánh long
+[33ma7465d3[m Update source code. Call api get list movie on home page.
+[33mf76e8b9[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #18 from Haidoan29/haidt
+[33m01bc0f1[m Merge pull request #17 from Haidoan29/tamMt
+[33m1309abc[m  ud
+[33mae05549[m Update showtime screen.
+[33m661a892[m Merge pull request #16 from Haidoan29/haidt
+[33m5458753[m  ud
+[33m3d4873f[m Merge pull request #15 from Haidoan29/haidt
+[33mc66ddd4[m  call page login and movie afmin
+[33me6235f4[m Merge pull request #14 from Haidoan29/tamMt
+[33m7bf8946[m Update source code.
+[33mdd7872e[m Merge pull request #13 from Haidoan29/tamMt
+[33m7510ee8[m Update source code. Modify UI of showtime screen.
+[33mcb5598d[m Merge pull request #12 from Haidoan29/haidt
+[33m7e0478a[m  fix conflicts
+[33m0b09e9a[m[33m ([m[1;31morigin/duc[m[33m)[m duc
+[33m9f36be5[m duc
+[33m8950f83[m Merge pull request #10 from Haidoan29/tamMt
+[33mdd6365e[m Update source code. Seperated css file.
+[33m3537348[m Update source code. Modify ui layout of about us, movie detail.
+[33m9ab3454[m Merge pull request #9 from Haidoan29/haidt
+[33mad2b2f2[m ud register
+[33mb483eb1[m Merge pull request #8 from Haidoan29/haidt
+[33m3661759[m fix login and register add role
+[33m71f8142[m Merge pull request #7 from Haidoan29/haidt
+[33m9403730[m call api login and register
+[33m6610849[m Merge pull request #6 from Haidoan29/huong
+[33m5c05b4a[m[33m ([m[1;31morigin/huong[m[33m)[m ud
+[33mffa1baf[m css form loginregister
+[33m3354b58[m Merge pull request #5 from Haidoan29/haidt
+[33ma418108[m showtimes
+[33m0ace2b0[m payment page
+[33mf59dc37[m about pages
+[33m2303474[m ud
+[33m40be1bb[m Merge pull request #4 from Haidoan29/haidt
+[33m4ccbe81[m Entertainment Detail
+[33m90548e3[m Merge pull request #3 from Haidoan29/haidt
+[33mdc8ac7f[m Entertainment page
+[33maec2530[m booking movie
+[33me2caece[m page movie detail
+[33mfbfc4bf[m page movie
+[33m8891887[m Merge pull request #2 from Haidoan29/haidt
+[33mb72d585[m login-register
+[33m35df9b5[m Merge pull request #1 from Haidoan29/haidt
+[33m01d918c[m homepage and header , footer
+[33ma1103c6[m ud
+[33m488da60[m innit project
+[33m8f60568[m Initial commit

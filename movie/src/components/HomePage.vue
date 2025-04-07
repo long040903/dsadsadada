@@ -1,5 +1,6 @@
 <template>
   <HeaderComponents />
+  <div class="px-48">
   <main class="p-4">
     <div class="relative">
       <img
@@ -202,8 +203,9 @@
               Xem Trailer
             </button>
             <button
-              class="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap"
-                 >
+              class="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full flex items-center whitespace-nowrap" 
+              @click="bookTicket(movie.movieId)">
+                
               Tìm Hiểu Thêm
             </button>
           </div>
@@ -483,6 +485,7 @@
       </form>
     </div>
   </div>
+</div>
   <FooterComponents />
 </template>
 <script>
@@ -501,13 +504,13 @@ export default {
     return {
       cinemas: [],
       movies: [],
-      selectedCinema: null,
+      selectedCinema: "",
       filteredMovies: [],
-      selectedMovie: null,
+      selectedMovie: "",
       availableDates: [],
-      selectedDate: null,
+      selectedDate: "",
       availableTimes: [],
-      selectedTime: null
+      selectedTime: ""
     };
   },
   async mounted() {

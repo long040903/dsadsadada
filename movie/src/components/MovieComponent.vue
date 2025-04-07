@@ -39,11 +39,11 @@
         </div>
         <p class="mt-4">{{ movie.title }}</p>
         <div class="flex justify-center space-x-4 mt-4">
-          <button class="bg-transparent text-white py-2 px-4 rounded border border-white">
+          <button class="bg-transparent text-white py-2 px-4 rounded border border-white" @click="viewTrailer(movie)">
             <i class="fas fa-play-circle mr-2"></i>
             Xem Trailer
           </button>
-          <button class="bg-yellow-500 text-black py-2 px-4 rounded">
+          <button class="bg-yellow-500 text-black py-2 px-4 rounded" @click="bookTicket(movie.movie_id)">
             ĐẶT VÉ
           </button>
         </div>

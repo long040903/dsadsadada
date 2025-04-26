@@ -5,7 +5,7 @@
             <div class="flex-1 p-6">
                 <HeaderComponent />
                 <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl font-bold">Quản lý phim</h1>
+                    <h1 class="text-2xl font-bold">Quản lý ảnh</h1>
                     <div class="flex items-center">
                         <input class="border rounded-l px-4 py-2"
                             placeholder="Tìm kiếm theo Tên chính sách, Mã chính sách" type="text" />
@@ -25,48 +25,24 @@
                         <thead>
                             <tr>
                                 <th class="py-2 px-4 border-b">ID</th>
-                                <th class="py-2 px-4 border-b">Title</th>
-                                <th class="py-2 px-4 border-b">Genre</th>
-                                <th class="py-2 px-4 border-b">Poster</th>
-                                <th class="py-2 px-4 border-b">Trailer</th> <!-- Cột mới cho Trailer -->
-                                <th class="py-2 px-4 border-b">Director </th>
-                                <th class="py-2 px-4 border-b">Cast</th>
-                                <th class="py-2 px-4 border-b">Description</th>
-                                <th class="py-2 px-4 border-b">Release year</th>
-                                <th class="py-2 px-4 border-b">Release date</th>
-                                <th class="py-2 px-4 border-b">Duration</th>
+                                <th class="py-2 px-4 border-b">Name </th>
+                                <th class="py-2 px-4 border-b">Image </th>
 
-
-
-                                <th class="py-2 px-4 border-b">Action</th>
+                                <th class="py-2 px-4 border-b">action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(movie, index) in movies" :key="movie.movie_id">
-                                <td class="py-2 px-4 border-b">{{ movie.movie_id }}</td>
-                                <td class="py-2 px-4 border-b">{{ movie.title }}</td>
-                                <td class="py-2 px-4 border-b">{{ movie.genre }}</td>
-                                <td class="py-2 px-4 border-b">
-                                    <img :src="movie.banner_url" alt="Banner" class="h-20 w-20">
-                                </td>
-                                <td class="py-2 px-4 border-b">
-                                    <a :href="movie.trailer_url" class="text-blue-500" target="_blank">
-                                    <i class="fas fa-play-circle"></i>
-                                    </a>
-                                </td>
-                                <td class="py-2 px-4 border-b text-center">{{ movie.director }}</td>
-                                <td class="py-2 px-4 border-b text-center">{{ movie.cast }}</td>
-                                <td class="py-2 px-4 border-b text-center">{{ movie.description }}</td>
-                                <td class="py-2 px-4 border-b text-center">{{ movie.release_year }}</td>
-                                <td class="py-2 px-4 border-b text-center">{{ movie.release_date }}</td>
-                                <td class="py-2 px-4 border-b text-center">
-                                    {{ movie.duration }}'
+                            <tr class="text-center" v-for="(anhbia, index) in anhbias" :key="anhbia.anhbia_id">
+                                <td class="py-2 px-4 border-b">{{ anhbia.anhbia_id }}</td>
+                                <td class="py-2 px-4 border-b">{{ anhbia.name }}</td>
+                                <td class="py-2 px-4 border-b" style="display: flex; justify-content: center;">
+                                    <img :src="anhbia.banner_url" alt="Banner" class="h-20 w-40">
                                 </td>
                                 <td class="py-2 px-4 border-b text-center">
-                                    <button class="text-blue-500" @click="openModal('edit', movie)">
+                                    <button class="text-blue-500" @click="openModal('edit', anhbia)">
                                     <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="text-red-500 ml-2" @click="openModal('delete', movie)">
+                                    <button class="text-red-500 ml-2" @click="openModal('delete', anhbia)">
                                     <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -93,21 +69,19 @@
 
                         <h2 class="text-xl font-bold mb-4">{{ modalType === 'add' ? 'Thêm mới' : 'Chỉnh sửa' }}</h2>
                         <form @submit.prevent="handleSubmit">
-                            <label class="block mb-2">Mã Phim:</label>
-                            <input type="text" v-model="form.movieId" class="border px-4 py-2 w-full mb-4" disabled>
+                            <label class="block mb-2">ID:</label>
+                            <input type="text" v-model="form.anhbiaId" class="border px-4 py-2 w-full mb-4" disabled>
 
-                            <label class="block mb-2">Tên Phim:</label>
-                            <input type="text" v-model="form.title" class="border px-4 py-2 w-full mb-4">
+                            <label class="block mb-2">Name:</label>
+                            <input type="text" v-model="form.name" class="border px-4 py-2 w-full mb-4">
 
-                            <label class="block mb-2">Thể Loại:</label>
-                            <input type="text" v-model="form.genre" class="border px-4 py-2 w-full mb-4">
 
                             <div class="mb-4">
                                 <label class="block mb-2">Banner URL <span class="text-red-500">*</span>:</label>
                                 <div class="flex items-center">
                                     <!-- Remove v-model from input[type="file"] -->
                                     <input type="file" @change="handleFileUpload('banner', $event)" class="aaa">
-                                    <a v-if="form.bannerUrl" :href="form.bannerUrl" target="_blank"
+                                    <a v-if="form.trailerUrl" :href="form.trailerUrl" target="_blank"
                                         class="text-blue-500 hover:underline flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
@@ -120,43 +94,7 @@
                                 </div>
                             </div>
 
-                            <!-- Trailer Upload Section -->
-                            <div class="mb-4">
-                                <label class="block mb-2">Trailer URL <span class="text-red-500">*</span>:</label>
-                                <div class="flex items-center">
-
-                                    <input type="file" @change="handleFileUpload('trailer', $event)" class="aa">
-
-                                    <a v-if="form.trailerUrl" :href="form.trailerUrl" target="_blank"
-                                        class="text-blue-500 hover:underline flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4.5C7.30558 4.5 3.34791 7.38303 1.5 12c1.84791 4.617 5.80558 7.5 10.5 7.5s8.65209-2.88397 10.5-7.5c-1.84791-4.617-5.80558-7.5-10.5-7.5zM12 14.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
-                                        </svg>
-                                        View trailer
-                                    </a>
-                                </div>
-                            </div>
-
-                            <label class="block mb-2">Đạo Diễn:</label>
-                            <input type="text" v-model="form.director" class="border px-4 py-2 w-full mb-4">
-
-                            <label class="block mb-2">Diễn Viên:</label>
-                            <input type="text" v-model="form.cast" class="border px-4 py-2 w-full mb-4">
-
-                            <label class="block mb-2">Mô Tả:</label>
-                            <input type="text" v-model="form.description" class="border px-4 py-2 w-full mb-4">
-                            <label class="block mb-2">Năm phát hành:</label>
-                            <input type="number" v-model="form.releaseYear" class="border px-4 py-2 w-full mb-4"
-                                min="1900" max="2100" placeholder="YYYY" @input="formatYear">
-
-                            <label class="block mb-2">Ngày Phát Hành:</label>
-                            <input type="date" v-model="form.releaseDate" class="border px-4 py-2 w-full mb-4">
-
-                            <label class="block mb-2">Thời Lượng (phút):</label>
-                            <input type="number" v-model="form.duration" class="border px-4 py-2 w-full mb-4">
-
+                            
                             <div class="flex justify-end">
                                 <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2"
                                     @click="closeModal">Đóng</button>
@@ -196,7 +134,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
 export default {
-    name: 'HomePage',
+    name: 'Anhbia',
     components: {
         NavbarComponent,
         HeaderComponent
@@ -210,7 +148,7 @@ export default {
                 policyName: '',
                 // Các trường khác
             },
-            movies: [], // Mảng chứa danh sách phim
+            anhbias: [], // Mảng chứa danh sách phim
             errorMessage: '', // Thông báo lỗi
         };
     },
@@ -220,30 +158,22 @@ export default {
             this.$refs.bannerFile.click();
         },
 
-        // Trigger the hidden input for trailer file upload
-        triggerTrailerUpload() {
-            this.$refs.trailerFile.click();
-        },
+        
         handleFileUpload(field, event) {
             const file = event.target.files[0]; // Get the selected file
 
             if (file) {
                 const isImage = field === 'banner';
-                const isVideo = field === 'trailer';
 
                 // Set file size limits
                 const maxImageSize = 5 * 1024 * 1024; // 5MB for images
-                const maxVideoSize = 50 * 1024 * 1024; // 50MB for videos
 
                 // Check file size based on type
                 if (isImage && file.size > maxImageSize) {
                     alert('Image file size exceeds the 5MB limit.');
                     return;
                 }
-                if (isVideo && file.size > maxVideoSize) {
-                    alert('Video file size exceeds the 50MB limit.');
-                    return;
-                }
+                
 
                 // For images: Use FileReader to preview the image in base64 format
                 if (isImage) {
@@ -255,42 +185,29 @@ export default {
                     reader.readAsDataURL(file); // Convert the image file to base64
                 }
 
-                // For videos: Directly store the video file and display a video preview
-                if (isVideo) {
-                    this.form[field] = file; // Store the actual video file for upload
-                    const videoUrl = URL.createObjectURL(file); // Create a local URL for video preview
-                    this.form[`${field}Url`] = videoUrl; // Set video URL for preview
-                }
+                
             }
         },
 
 
 
-        openModal(type, movie = null) {
+        openModal(type, anhbia = null) {
             this.modalType = type;
             this.showModal = true;
 
-            if (type === 'edit' && movie) { // Changed 'movies' to 'movie' here as well for consistency
+            if (type === 'edit' && anhbia) { // Changed 'movies' to 'movie' here as well for consistency
                 // Gán dữ liệu của phim vào form để chỉnh sửa
-                this.form.movieId = movie.movie_id;
-                this.form.title = movie.title;
-                this.form.genre = movie.genre;
-                this.form.bannerUrl = movie.banner_url;
-                this.form.trailerUrl = movie.trailer_url;
-                this.form.releaseYear = movie.release_year;
-                this.form.director = movie.director;
-                this.form.cast = movie.cast;
-                this.form.description = movie.description;
-                this.form.releaseDate = movie.release_date;
-                this.form.duration = movie.duration;
+                this.form.anhbiaId = anhbia.anhbia_id;
+                this.form.name = anhbia.name;
+                this.form.bannerUrl = anhbia.banner_url;
             } else if (type === 'add') {
                 // Đặt form về trạng thái trống khi thêm mới
                 this.form = { /* ... */ };
-            } else if (type === 'delete' && movie) { // Changed 'movies' to 'movie' here
+            } else if (type === 'delete' && anhbia) { // Changed 'movies' to 'movie' here
                 // Chỉ cần lưu movie_id để xóa
-                console.log('Deleting movie object received:', movie);
-                this.form.movieId = movie.movie_id;
-                this.form.title = movie.title;
+                console.log('Deleting anh object received:', anhbia);
+                this.form.anhbiaId = anhbia.anhbia_id;
+                this.form.name = anhbia.name;
             }
         },
 
@@ -298,19 +215,10 @@ export default {
             this.showModal = false;
       // Reset form after closing
             this.form = {
-                movieId: '',
-                title: '',
-                genre: '',
+                anhbiaId: '',
+                name: '',
                 bannerUrl: '',
-                trailerUrl: '',
-                director: '',
-                cast: '',
-                description: '',
-                releaseYear: '',
-                releaseDate: '',
-                duration: '',
                 banner: null,
-                trailer: null,
             };
         },
         async handleSubmit() {
@@ -334,28 +242,19 @@ export default {
 
             // Prepare FormData to handle file uploads (banner & trailer)
             const formData = new FormData();
-            formData.append('title', this.form.title);
-            formData.append('genre', this.form.genre);
-            formData.append('release_year', this.form.releaseYear);
-            formData.append('director', this.form.director);
-            formData.append('cast', this.form.cast);
-            formData.append('description', this.form.description);
-            formData.append('release_date', this.form.releaseDate);
-            formData.append('duration', this.form.duration);
+            formData.append('name', this.form.name);
 
             // Append banner and trailer files if they exist
             if (this.form.banner) {
                 formData.append('banner', this.form.banner); // Append banner file
             }
-            if (this.form.trailer) {
-                formData.append('trailer', this.form.trailer); // Append trailer file
-            }
+            
 
             // Define API endpoint and method
             const url =
                 this.modalType === 'add'
-                    ? `${import.meta.env.VITE_API_BASE_URL}/api/movies`
-                    : `${import.meta.env.VITE_API_BASE_URL}/api/movies/${this.form.movieId}`;
+                    ? `${import.meta.env.VITE_API_BASE_URL}/api/anhbias`
+                    : `${import.meta.env.VITE_API_BASE_URL}/api/anhbias/${this.form.anhbiaId}`;
 
             const method = this.modalType === 'add' ? 'POST' : 'PUT';
 
@@ -369,7 +268,7 @@ export default {
                 });
 
                 if (response.ok) {
-                    alert(this.modalType === 'add' ? 'Movie added successfully!' : 'Movie updated successfully!');
+                    alert(this.modalType === 'add' ? 'anh added successfully!' : 'anh updated successfully!');
                 } else {
                     // Log more details about the error
                     console.error('Response status:', response.status);
@@ -395,7 +294,7 @@ export default {
 
         // Trong phần methods của component
         async handleDelete() {
-      console.log('Deleting movieId (inside handleDelete):', this.form.movieId);
+      console.log('Deleting anhbiaId (inside handleDelete):', this.form.anhbiaId);
 
       const token = Cookies.get('authToken');
       if (!token) {
@@ -409,7 +308,7 @@ export default {
       }
 
       try {
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/movies/${this.form.movieId}`;
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/anhbias/${this.form.anhbiaId}`;
         const response = await axios.delete(apiUrl, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -417,40 +316,40 @@ export default {
         });
 
         if (response.status === 200) {
-          alert('Movie deleted successfully!');
-          this.getallMovie(); // Refresh the movie list after successful deletion
+          alert('anh deleted successfully!');
+          this.getallAnhs(); // Refresh the movie list after successful deletion
         } else if (response.status === 404) {
-          alert('Movie not found on the server.');
+          alert('anh not found on the server.');
         } else {
-          console.error('Failed to delete movie:', response.data);
-          alert('Failed to delete movie: ' + (response.data.message || 'An unexpected error occurred.'));
+          console.error('Failed to delete anh:', response.data);
+          alert('Failed to delete anh: ' + (response.data.message || 'An unexpected error occurred.'));
         }
       } catch (error) {
-        console.error('Error deleting movie:', error.response ? error.response.data : error.message);
-        alert('An error occurred while deleting the movie.');
+        console.error('Error deleting anh:', error.response ? error.response.data : error.message);
+        alert('An error occurred while deleting the anh.');
       }
 
       this.closeModal(); // Close the delete modal after attempting to delete
     },
-        async getallMovie() {
+        async getallAnhs() {
             try {
-                const apiUrl = import.meta.env.VITE_API_BASE_URL + '/api/movies';
+                const apiUrl = import.meta.env.VITE_API_BASE_URL + '/api/anhbias';
                 const response = await axios.get(apiUrl); // Gọi API để lấy danh sách phim
 
                 // Log toàn bộ response để xem cấu trúc dữ liệu trả về
                 console.log('Full API response:', response);
 
                 // Kiểm tra xem response.data chứa gì
-                if (response.data && response.data.movies) {
-                    this.movies = response.data.movies; // Gán danh sách phim nếu đúng cấu trúc
+                if (response.data && response.data.anhbias) {
+                    this.anhbias = response.data.anhbias; // Gán danh sách phim nếu đúng cấu trúc
                 } else if (response.data && Array.isArray(response.data)) {
-                    this.movies = response.data; // Nếu response trả về là một mảng
+                    this.anhbias = response.data; // Nếu response trả về là một mảng
                 } else {
-                    this.movies = []; // Nếu không có phim
+                    this.anhbias = []; // Nếu không có phim
                     this.errorMessage = 'Không có phim nào.';
                 }
 
-                console.log('Movies:', this.movies);
+                console.log('Anhbias:', this.anhbias);
             } catch (error) {
                 console.error('Lỗi khi lấy danh sách phim:', error.response ? error.response.data : error.message);
                 this.errorMessage = 'Lỗi khi lấy danh sách phim.';
@@ -464,7 +363,7 @@ export default {
     },
     mounted() {
         // Gọi hàm getallMovie khi component được mount
-        this.getallMovie();
+        this.getallAnhs();
     }
 };
 </script>

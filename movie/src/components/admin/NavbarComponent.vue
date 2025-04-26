@@ -20,6 +20,30 @@
                     </a>
                 </li>
                 <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin/anhbias">
+                        <i class="fas fa-chevron-right mr-2"></i>
+                        <span>Quản lý ảnh</span>
+                    </a>
+                </li>
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin/posters">
+                        <i class="fas fa-chevron-right mr-2"></i>
+                        <span>Quản lý poster</span>
+                    </a>
+                </li>
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin/maps">
+                        <i class="fas fa-chevron-right mr-2"></i>
+                        <span>Quản lý map</span>
+                    </a>
+                </li>
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
+                    <a class="flex items-center" href="/admin/citys">
+                        <i class="fas fa-chevron-right mr-2"></i>
+                        <span>Quản lý thành phố</span>
+                    </a>
+                </li>
+                <li class="pt-4 pb-4 px-4 py-2 hover:bg-gray-200">
                     <a class="flex items-center" href="/admin/cinemas">
                         <i class="fas fa-chevron-right mr-2"></i>
                         <span>Quản lý rạp phim</span>

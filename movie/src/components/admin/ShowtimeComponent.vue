@@ -244,7 +244,7 @@ export default {
                     movie_id: this.form.movieId,
                     cinema_id: this.form.cinemaId,
                     show_date: this.form.showDate,
-                    show_time: this.form.showTime + ':00' // Thêm giây vào thời gian
+                    show_time: this.form.showTime 
                 };
 
                 const url = this.modalType === 'add'

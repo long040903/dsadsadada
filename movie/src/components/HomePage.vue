@@ -1,6 +1,6 @@
 <template>
   <HeaderComponents />
-  <div class="px-48">
+  <div class="px-9">
     <main class="p-4">
       <div class="relative">
         <img
@@ -508,7 +508,7 @@ import HeaderComponents from "./HeaderComponent.vue";
 import FooterComponents from "./FooterComponents.vue";
 
 export default {
-  name: "ShowtimesComponent",
+  name: "HomePage",
   components: {
     HeaderComponents,
     FooterComponents,

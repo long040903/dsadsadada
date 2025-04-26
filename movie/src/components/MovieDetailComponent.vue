@@ -9,7 +9,7 @@
                   <div class="relative">
                       <img alt="Movie poster showing a group of people with various expressions" class="rounded-lg"
                           height="600"
-                          src="https://storage.googleapis.com/a1aa/image/Q39JTVZk03bRSdbWqcBMO4UPf2PrO0HMksfg9CYrwW4.jpg"
+                          :src="movieDetails.banner_url "
                           width="400" />
                       <div class="absolute top-2 left-2 bg-orange-500 text-white text-sm font-bold px-2 py-1 rounded">
                           T18

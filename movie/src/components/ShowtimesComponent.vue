@@ -9,11 +9,11 @@
             <select
               class="bg-gray-800 text-white py-2 px-4 rounded-md"
               v-model="selectedDate"
-              @change="filterShowtimesByDate"
+              @change="filterMoviesByDate"
             >
               <option value="">Chọn ngày</option>
               <option v-for="date in uniqueShowDates" :key="date" :value="date">
-                {{ date }}
+                {{ formatDate(date) }}
               </option>
             </select>
           </div>
@@ -25,35 +25,33 @@
             <select
               class="bg-gray-800 text-white py-2 px-4 rounded-md w-full"
               v-model="selectedMovie"
-              @change="fetchCinemasByMovie(selectedMovie)"
+              @change="filterCinemasByMovieAndDate"
+              :disabled="!selectedDate"
             >
               <option value="">Chọn Phim</option>
               <option
-                v-for="showtime in filteredShowtimes"
-                :key="showtime.showtimeId"
-                :value="showtime.movieId"
+                v-for="movie in filteredMoviesByDate"
+                :key="movie.movie_id"
+                :value="movie.movie_id"
               >
-                {{ showtime.movie ? showtime.movie.title : "Không có phim" }}
+                {{ movie.title }}
               </option>
             </select>
           </div>
         </div>
+
         <div class="flex items-center space-x-2">
           <label class="text-lg font-bold" for="cinema">3. Rạp</label>
           <div class="relative w-full">
-            <p>{{ cinemas }}</p>
             <select
               class="bg-gray-800 text-white py-2 px-4 rounded-md w-full"
               v-model="selectedCinema"
-              @change="fetchMoviesByCinema(selectedCinema)"
+              @change="filterShowtimesByCinemaAndMovieAndDate"
+              :disabled="!selectedMovie"
             >
               <option value="">Chọn Rạp</option>
-              <option
-                v-for="cinema in cinemas"
-                :key="cinema.id"
-                :value="cinema.id"
-              >
-                {{ showtime.cinema ? showtime.cinema.name : "Không có rạp" }}
+              <option v-for="cinema in filteredCinemasByMovieAndDate" :key="cinema.cinema_id" :value="cinema.cinema_id">
+                {{ cinema.name }}
               </option>
             </select>
           </div>
@@ -63,59 +61,91 @@
         {{ errorMessage }}
       </div>
       <hr class="border-gray-600 my-4" />
-      <div
-        v-for="showtime in showtimes"
-        :key="showtime.showtimeId"
-        class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray my-4 py-4"
-      >
-        <div>
-          <img
-            alt="Movie poster for Nhà Gia Tiền"
-            class="w-full rounded-md mb-4"
-            height="600"
-            src="https://storage.googleapis.com/a1aa/image/ko0jsk5Ayd8kx_MahbqtAEMoVYUeol5au8eEL8kLt-I.jpg"
-            width="400"
-          />
-          <div class="text-lg font-bold mb-2">
-            <i class="fas fa-video"></i>
-            {{ showtime.movie.title }} (T18)
+
+      <div v-if="selectedMovie && selectedCinema && filteredShowtimesByCinemaAndMovieAndDate.length > 0">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-200 my-6 py-6">
+          <div class="movie-info">
+            <img
+              :src="filteredShowtimesByCinemaAndMovieAndDate[0]?.Movie?.banner_url"
+              :alt="filteredShowtimesByCinemaAndMovieAndDate[0]?.Movie?.title"
+              class="w-full rounded-lg mb-4 h-64 object-cover"
+            />
+            <h3 class="text-xl font-bold mb-2">{{ filteredShowtimesByCinemaAndMovieAndDate[0]?.Movie?.title }}</h3>
+            <p class="text-gray-600 mb-1">{{ filteredShowtimesByCinemaAndMovieAndDate[0]?.Movie?.genre }}</p>
+            <p class="text-gray-600">{{ filteredShowtimesByCinemaAndMovieAndDate[0]?.Movie?.duration }} phút</p>
           </div>
-          <div class="text-sm mb-1">
-            <i class="fas fa-film"></i>
-            {{ showtime.movie.genre }}
-          </div>
-          <div class="text-sm mb-1">
-            <i class="fas fa-clock"></i>
-            {{ showtime.movie.duration }} min
-          </div>
-          <div class="text-sm">
-            <i class="fas fa-exclamation-triangle"></i>
-            T18: Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)
-          </div>
-        </div>
-        <div>
-          <div class="overflow-hidden">
-            <div class="text-xl font-bold mb-2 text-alight">Cinestar</div>
-            <div class="text-lg font-bold mb-1 truncate">
-              <i class="fas fa-building"></i>
-              {{ showtime.cinema.name }}
-            </div>
-            <div class="text-sm mb-2 truncate">
-              <i class="fas fa-map-marker-alt"></i>
-              {{ showtime.cinema.address }}
+
+          <div class="col-span-2 cinema-list">
+            <div class="mb-6 pb-4 border-b border-gray-100 last:border-0">
+              <div class="cinema-info mb-3">
+                <h4 class="text-lg font-semibold flex items-center">
+                  <i class="fas fa-building mr-2 text-yellow-500"></i>
+                  {{ filteredShowtimesByCinemaAndMovieAndDate[0]?.Cinema?.name }}
+                </h4>
+                <p class="text-sm text-gray-500 flex items-center mt-1">
+                  <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                  {{ filteredShowtimesByCinemaAndMovieAndDate[0]?.Cinema?.address }}
+                </p>
+              </div>
+
+              <div class="showtimes flex flex-wrap gap-2">
+                <div
+                  v-for="showtime in filteredShowtimesByCinemaAndMovieAndDate"
+                  :key="showtime.show_time"
+                  class="px-3 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition-colors"
+                >
+                  {{ formatTime(showtime.show_time) }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div>
-          <div
-            class="flex flex-wrap gap-2 p-2 border border-gray-400 rounded-md bg-gray-800 text-white text-sm shadow-sm"
-          >
+      </div>
+
+      <div v-else>
+        <div
+          v-for="movieGroup in groupedShowtimes"
+          :key="movieGroup.movie.movie_id"
+          class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-200 my-6 py-6"
+        >
+          <div class="movie-info">
+            <img
+              :src="movieGroup.movie.banner_url"
+              :alt="movieGroup.movie.title"
+              class="w-full rounded-lg mb-4 h-64 object-cover"
+              @click="bookTicket(movieGroup.movie.movie_id)"
+            />
+            <h3 class="text-xl font-bold mb-2">{{ movieGroup.movie.title }}</h3>
+            <p class="text-gray-600 mb-1">{{ movieGroup.movie.genre }}</p>
+            <p class="text-gray-600">{{ movieGroup.movie.duration }} phút</p>
+          </div>
+
+          <div class="col-span-2 cinema-list">
             <div
-              v-for="time in showtime.showTime"
-              :key="time"
-              class="inline-flex items-center justify-center px-3 py-1 border border-gray-500 rounded-md max-w-max"
+              v-for="cinemaGroup in movieGroup.cinemas"
+              :key="cinemaGroup.cinema.cinema_id"
+              class="mb-6 pb-4 border-b border-gray-100 last:border-0"
             >
-              {{ formatTime(time) }}
+              <div class="cinema-info mb-3">
+                <h4 class="text-lg font-semibold flex items-center">
+                  <i class="fas fa-building mr-2 text-yellow-500"></i>
+                  {{ cinemaGroup.cinema.name }}
+                </h4>
+                <p class="text-sm text-gray-500 flex items-center mt-1">
+                  <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                  {{ cinemaGroup.cinema.address }}
+                </p>
+              </div>
+
+              <div class="showtimes flex flex-wrap gap-2">
+                <div
+                  v-for="time in cinemaGroup.showtimes"
+                  :key="time"
+                  class="px-3 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition-colors"
+                >
+                  {{ formatTime(time.split('_')[1]) }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,12 +155,12 @@
   <div class="bg-gradient-to-r from-purple-900 to-blue-900 text-white">
     <div class="container mx-auto py-8">
       <div class="text-center mb-8">
-        <button class="bg-yellow-500 text-black font-bold py-2 px-4 rounded">
-          XEM TẤT CẢ LỊCH CHIẾU
+        <button class="bg-yellow-500 text-black font-bold py-2 px-4 rounded" @click="toggleShowAllMovies">
+          {{ showAllMovies ? 'ẨN BỚT' : 'XEM TẤT CẢ LỊCH CHIẾU' }}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 container mx-auto max-w-7xl">
-        <div class="text-center" v-for="movie in allMovies" :key="movie.id">
+        <div class="text-center" v-for="movie in allMovies" :key="movie.movieId">
           <div class="relative">
             <img
               :alt="movie.title"
@@ -169,7 +199,7 @@
   </div>
   <FooterComponents />
 </template>
-  <script>
+<script>
 import axios from "axios";
 import HeaderComponents from "./HeaderComponent.vue";
 import FooterComponents from "./FooterComponents.vue";
@@ -182,16 +212,17 @@ export default {
   },
   data() {
     return {
-      showtimes: [],
+      allShowtimes: [],
       selectedDate: "",
       selectedMovie: "",
       selectedCinema: "",
-      movies: [],
-      cinemas: [],
       errorMessage: "",
       isLoading: false,
       uniqueShowDates: [],
-      filteredShowtimes: [],
+      uniqueMovies: [],
+      filteredMoviesByDate: [],
+      filteredCinemasByMovieAndDate: [],
+      filteredShowtimesByCinemaAndMovieAndDate: [],
       allMovies: [],
     };
   },
@@ -200,34 +231,60 @@ export default {
     this.getAllMovies();
   },
 
+  computed: {
+    groupedShowtimes() {
+      const grouped = {};
+      this.allShowtimes.forEach(showtime => {
+        const movieId = showtime.movie_id;
+        if (!grouped[movieId]) {
+          grouped[movieId] = {
+            movie: showtime.Movie,
+            cinemas: {}
+          };
+        }
+        const cinemaId = showtime.cinema_id;
+        if (!grouped[movieId].cinemas[cinemaId]) {
+          grouped[movieId].cinemas[cinemaId] = {
+            cinema: showtime.Cinema,
+            showtimes: new Set()
+          };
+        }
+        grouped[movieId].cinemas[cinemaId].showtimes.add(`${showtime.show_date}_${showtime.show_time}`);
+      });
+
+      return Object.values(grouped).map(movieGroup => ({
+        movie: movieGroup.movie,
+        cinemas: Object.values(movieGroup.cinemas).map(cinemaGroup => ({
+          cinema: cinemaGroup.cinema,
+          showtimes: Array.from(cinemaGroup.showtimes).sort()
+        }))
+      }));
+    },
+  },
+
   methods: {
     async getAllMovies() {
       try {
         const apiUrl = import.meta.env.VITE_API_BASE_URL + "/api/movies";
         const response = await axios.get(apiUrl);
 
-        // If get movie is successful, store token in cookies
         if (response.status === 200) {
           const data = response.data?.movies;
-          this.allMovies = data?.map((m) => {
-            return {
-              movieId: m.movie_id,
-              title: m.title,
-              genre: m.genre,
-              releaseYear: m.release_date,
-              trailerUrl: m.trailer_url,
-              bannerUrl: m.banner_url,
-              director: m.director,
-              cast: m.cast,
-              description: m.description,
-              releaseDate: m.release_date,
-              duration: m.duration,
-              content: m.content,
-            };
-          });
+          this.allMovies = data?.map((m) => ({
+            movieId: m.movie_id,
+            title: m.title,
+            genre: m.genre,
+            releaseYear: m.release_date,
+            trailerUrl: m.trailer_url,
+            bannerUrl: m.banner_url,
+            director: m.director,
+            cast: m.cast,
+            description: m.description,
+            releaseDate: m.release_date,
+            duration: m.duration,
+            content: m.content,
+          })) || [];
         }
-
-        // Show success message
         console.log("Get all movies successful:", response.data);
       } catch (error) {
         console.error(
@@ -241,7 +298,6 @@ export default {
       this.$router.push({ name: "MovieDetailView", params: { id: movieId } });
     },
 
-    // 🟢 Xem trailer
     viewTrailer(url) {
       window.open(url, "_blank");
     },
@@ -252,168 +308,111 @@ export default {
         const response = await axios.get(apiUrl);
 
         if (response.status === 200) {
-          const data = response.data?.showtimes || [];
-
-          // Nhóm showtimes theo movie + cinema + show_date
-          const grouped = {};
-
-          data.forEach((s) => {
-            const key = `${s.movie_id}_${s.cinema_id}_${s.show_date}`;
-
-            if (!grouped[key]) {
-              grouped[key] = {
-                showtimeId: s.showtime_id, // có thể dùng cái đầu tiên làm id
-                movieId: s.movie_id,
-                cinemaId: s.cinema_id,
-                showDate: s.show_date,
-                showTime: new Set([s.show_time]), // Sử dụng Set để loại bỏ giờ trùng
-                movie: s.Movie
-                  ? {
-                      id: s.Movie.movie_id,
-                      title: s.Movie.title,
-                      genre: s.Movie.genre,
-                      duration: s.Movie.duration,
-                    }
-                  : null,
-                cinema: s.Cinema
-                  ? {
-                      id: s.Cinema.cinema_id,
-                      name: s.Cinema.name,
-                      address: s.Cinema.address,
-                    }
-                  : null,
-              };
-            } else {
-              grouped[key].showTime.add(s.show_time); // Thêm giờ vào Set để loại bỏ trùng
-            }
-          });
-
-          // Chuyển Set thành mảng lại để hiển thị
-          this.showtimes = Object.values(grouped).map((showtime) => ({
-            ...showtime,
-            showTime: [...showtime.showTime], // Chuyển Set thành mảng
-          }));
-
-          // Lấy danh sách ngày duy nhất
-          const uniqueDates = [
-            ...new Set(this.showtimes.map((s) => s.showDate)),
-          ];
-          this.uniqueShowDates = uniqueDates.map((date) =>
-            this.formatDate(date)
-          );
-
-          // Lọc theo ngày nếu đã chọn
-          if (this.selectedDate) {
-            this.filterShowtimesByDate();
-          }
+          this.allShowtimes = response.data?.showtimes || [];
+          this.processShowtimesData();
         }
       } catch (error) {
-        console.error(
-          "❌ Lỗi khi tải lịch chiếu:",
-          error.response?.data || error.message
-        );
+        console.error("Lỗi khi tải lịch chiếu:", error);
+        this.errorMessage = "Lỗi khi tải lịch chiếu.";
       }
     },
-    filterShowtimesByDate() {
+
+    processShowtimesData() {
+      const uniqueDatesSet = new Set(this.allShowtimes.map(st => st.show_date));
+      this.uniqueShowDates = Array.from(uniqueDatesSet).sort();
+      const uniqueMoviesMap = new Map(this.allShowtimes.map(st => [st.movie_id, st.Movie]));
+      this.uniqueMovies = Array.from(uniqueMoviesMap.values());
+    },
+
+    filterMoviesByDate() {
+      this.selectedMovie = "";
+      this.selectedCinema = "";
       if (this.selectedDate) {
-        // Lọc các lịch chiếu theo ngày đã chọn
-        this.filteredShowtimes = this.showtimes.filter(
-          (showtime) => showtime.showDate === this.selectedDate
+        this.filteredMoviesByDate = Array.from(
+          new Map(
+            this.allShowtimes
+              .filter(st => st.show_date === this.selectedDate)
+              .map(st => [st.movie_id, st.Movie])
+          ).values()
         );
-
-        // Cập nhật lại danh sách phim và rạp cho ngày đã chọn
-        this.fetchMoviesAndCinemasForSelectedDate();
+      } else {
+        this.filteredMoviesByDate = this.uniqueMovies;
       }
-    },
-    fetchMoviesAndCinemasForSelectedDate() {
-      // Lọc các bộ phim từ filteredShowtimes
-      this.movies = this.filteredShowtimes
-        .map((showtime) => showtime.movie)
-        .filter(
-          (movie, index, self) =>
-            self.findIndex((m) => m.id === movie.id) === index
-        ); // Loại bỏ trùng lặp
-
-      // Lọc các rạp từ filteredShowtimes
-      this.cinemas = this.filteredShowtimes
-        .map((showtime) => showtime.cinema)
-        .filter(
-          (cinema, index, self) =>
-            self.findIndex((c) => c.id === cinema.id) === index
-        ); // Loại bỏ trùng lặp
-
-      // Hiển thị thông báo lỗi nếu không có phim hoặc rạp
-      this.errorMessage = this.movies.length
-        ? ""
-        : "Không có phim nào vào ngày này!";
-      this.errorMessage = this.cinemas.length
-        ? ""
-        : "Không có rạp chiếu vào ngày này!";
+      this.filteredCinemasByMovieAndDate = [];
+      this.filteredShowtimesByCinemaAndMovieAndDate = [];
     },
 
-    async fetchCinemasByMovie(movieId) {
-      try {
-        this.selectedCinema = "";
-        this.cinemas = []; // Reset rạp và phim hiển thị
-
-        if (!movieId) {
-          this.errorMessage = "Vui lòng chọn phim!";
-          return;
-        }
-
-        // Lọc danh sách rạp có chiếu phim đó trong ngày đã chọn
-        this.cinemas = this.filteredShowtimes
-          .filter((s) => s.movieId === movieId && s.cinema) // Lọc đúng movieId
-          .map((s) => s.cinema);
-
-        // Loại bỏ trùng lặp
-        this.cinemas = [
-          ...new Map(this.cinemas.map((c) => [c.id, c])).values(),
-        ];
-
-        this.errorMessage = this.cinemas.length
-          ? ""
-          : "Không có rạp nào chiếu phim này!";
-      } catch (error) {
-        this.errorMessage = "Lỗi khi tải danh sách rạp!";
+    filterCinemasByMovieAndDate() {
+      this.selectedCinema = "";
+      if (this.selectedMovie && this.selectedDate) {
+        const relevantShowtimes = this.allShowtimes.filter(
+          st => st.movie_id === this.selectedMovie && st.show_date === this.selectedDate
+        );
+        const uniqueCinemasMap = new Map();
+        relevantShowtimes.forEach(showtime => {
+          uniqueCinemasMap.set(showtime.cinema_id, showtime.Cinema);
+        });
+        this.filteredCinemasByMovieAndDate = Array.from(uniqueCinemasMap.values());
+      } else {
+        this.filteredCinemasByMovieAndDate = [];
       }
+      this.filteredShowtimesByCinemaAndMovieAndDate = [];
     },
 
-    async fetchMoviesByCinema(cinemaId) {
-      try {
-        this.selectedMovie = ""; // Reset chọn phim khi chọn rạp mới
-        this.movies = []; // Reset danh sách phim hiển thị
+    filterShowtimesByCinemaAndMovieAndDate() {
+  if (this.selectedCinema && this.selectedMovie && this.selectedDate) {
+    const allShowtimesForSelection = this.allShowtimes.filter(
+      st =>
+        st.cinema_id === this.selectedCinema &&
+        st.movie_id === this.selectedMovie &&
+        st.show_date === this.selectedDate
+    );
 
-        if (!cinemaId) {
-          this.errorMessage = "Vui lòng chọn rạp!";
-          return;
-        }
+    // Sử dụng Set để lưu trữ các thời gian chiếu duy nhất
+    const uniqueShowTimes = new Set();
+    this.filteredShowtimesByCinemaAndMovieAndDate = [];
 
-        // Lọc danh sách phim có trong rạp vào ngày đã chọn
-        this.movies = this.filteredShowtimes
-          .filter((s) => s.cinemaId === cinemaId && s.movie)
-          .map((s) => s.movie);
-
-        // Loại bỏ trùng lặp
-        this.movies = [...new Map(this.movies.map((m) => [m.id, m])).values()];
-
-        this.errorMessage = this.movies.length
-          ? ""
-          : "Không có phim nào trong rạp này!";
-      } catch (error) {
-        this.errorMessage = "Lỗi khi tải danh sách phim!";
+    allShowtimesForSelection.forEach(showtime => {
+      if (!uniqueShowTimes.has(showtime.show_time)) {
+        uniqueShowTimes.add(showtime.show_time);
+        this.filteredShowtimesByCinemaAndMovieAndDate.push(showtime);
       }
-    },
+    });
+
+    // Sắp xếp lại các suất chiếu theo thời gian (tùy chọn)
+    this.filteredShowtimesByCinemaAndMovieAndDate.sort((a, b) => {
+      const timeA = a.show_time;
+      const timeB = b.show_time;
+      return timeA.localeCompare(timeB);
+    });
+
+  } else {
+    this.filteredShowtimesByCinemaAndMovieAndDate = [];
+  }
+},
+
     formatTime(time) {
       if (!time) return "";
-      const [hour, minute] = time.split(":");
+      const [hour, minute, second] = time.split(":");
       return `${hour}:${minute}`;
     },
+    bookTicket(movieId) {
+    if (!movieId) {
+      console.error('Không có movieId');
+      return;
+    }
+    this.$router.push({ name: 'MovieDetailView', params: { id: movieId } });
+  },
 
     formatDate(dateString) {
       if (!dateString) return "";
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
+      try {
+        const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+        return format(parsedDate, 'dd/MM/yyyy');
+      } catch (error) {
+        console.error("Error parsing date:", error, dateString);
+        return dateString;
+      }
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-48">
+  <div class="px-9">
     <header class="flex justify-between items-center p-4 bg-[#0b1120]">
       <div class="flex items-center">
         <router-link to="/" class="flex items-center">
@@ -14,17 +14,19 @@
         </router-link>
       </div>
       <div class="flex items-center space-x-4">
-        <router-link to="/movie">
-          <button class="bg-yellow-400 text-black px-4 py-2 rounded">
+        
+          <button class="bg-yellow-400 text-black px-4 py-2 rounded" @click="goToDatVe">
             ĐẶT VÉ NGAY
           </button>
-        </router-link>
+       
 
         <button class="bg-purple-600 px-4 py-2 rounded">ĐẶT BẮP NƯỚC</button>
         <input
           class="px-2 py-1 rounded"
           placeholder="Tìm phim, rạp"
           type="text"
+          v-model="searchQuery"
+          @keyup.enter="performSearch"
         />
 
         <template v-if="isLoggedIn">
@@ -118,6 +120,7 @@ export default {
   name: "HeaderHomePage",
   data() {
     return {
+      searchQuery: "",
       cinemas: [],
       isCinemaListVisible: false,
       menuVisible: false,
@@ -144,6 +147,14 @@ export default {
           "Get all cinemas error:",
           error.response ? error.response.data : error.message
         );
+      }
+    },
+    performSearch() {
+      if (this.searchQuery.trim()) {
+        this.$router.push({
+          path: "/search",
+          query: { q: this.searchQuery.trim() },
+        });
       }
     },
     showCinemaList() {
@@ -176,6 +187,9 @@ export default {
 
       return JSON.parse(jsonPayload);
     },
+    goToDatVe() {
+    this.$router.push('/datvengay');
+  }
   },
   mounted() {
     const token = Cookies.get("authToken");
@@ -192,5 +206,6 @@ export default {
 
     this.getAllCinemas();
   },
+  
 };
 </script>

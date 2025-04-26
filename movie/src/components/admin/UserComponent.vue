@@ -24,20 +24,18 @@
                     <table class="min-w-full bg-white">
                         <thead>
                             <tr>
-                                <th class="py-2 px-4 border-b">STT</th>
-                                <th class="py-2 px-4 border-b">Tên đầy đủ</th>
-                                <th class="py-2 px-4 border-b">Tên đăng nhập</th>
+                                <th class="py-2 px-4 border-b">Full name</th>
+                                <th class="py-2 px-4 border-b">Name</th>
                                 <th class="py-2 px-4 border-b">Email</th>
-                                <th class="py-2 px-4 border-b">Số điện thoại</th>
+                                <th class="py-2 px-4 border-b">Phone</th>
                                 <th class="py-2 px-4 border-b">CCCD</th>
-                                <th class="py-2 px-4 border-b">Ngày sinh</th>
+                                <th class="py-2 px-4 border-b">DoB</th>
                                 <th class="py-2 px-4 border-b">Vai trò</th>
-                                <th class="py-2 px-4 border-b">Hành động</th>
+                                <th class="py-2 px-4 border-b">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(user, index) in filteredUsers" :key="user.id">
-                                <td class="py-2 px-4 border-b text-center">{{ index + 1 }}</td>
                                 <td class="py-2 px-4 border-b text-center">{{ user.fullname }}</td>
                                 <td class="py-2 px-4 border-b text-center">{{ user.username }}</td>
                                 <td class="py-2 px-4 border-b text-center">{{ user.email }}</td>

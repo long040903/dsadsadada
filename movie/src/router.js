@@ -12,7 +12,15 @@ import HomeComponent from './components/admin/HomeComponent.vue';
 import LoginComponent from './components/admin/LoginComponent.vue';
 import CinemasAdmin from './view/admin/CinemasView.vue'
 import UserComponent from './components/admin/UserComponent.vue';
-import ShowtimesComponent from './components/admin/ShowtimeComponent.vue'
+import ShowtimesComponent from './components/admin/ShowtimeComponent.vue';
+import datvengay from './view/DatvengayView.vue';
+import SearchResults from './view/SearchResultsView.vue';
+import AnhbiaAdmin from './view/admin/AnhView.vue';
+import MapsAdmin from './view/admin/MapView.vue';
+import PosterAdmin from './view/admin/PosterView.vue';
+
+
+
 
 
 const routes = [
@@ -36,6 +44,17 @@ const routes = [
         name: 'MovieDetailView',
         component: MovieDetail,
     },
+    {
+        path: '/datvengay',
+        name: 'DatvengayView',
+        component: datvengay,
+    },
+    {
+        path: '/search',
+        name: 'SearchResults',
+        component: SearchResults,
+        
+      },
     {
         path: '/cac-loai-hinh-giai-tri-khac',
         name: 'EntertainmentView',
@@ -67,9 +86,24 @@ const routes = [
         component: HomeComponent,
     },
     {
+        path: '/admin/maps',
+        name: 'MapAdmin',
+        component: MapsAdmin,
+    },
+    {
         path: '/admin/cinemas',
-        name: 'MovieAdmin',
+        name: 'CinemasAdmin',
         component: CinemasAdmin,
+    },
+    {
+        path: '/admin/anhbias',
+        name: 'AnhbiaAdmin',
+        component: AnhbiaAdmin,
+    },
+    {
+        path: '/admin/posters',
+        name: 'PosterAdmin',
+        component: PosterAdmin,
     },
     {
         path: '/admin/login',
